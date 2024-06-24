@@ -12,6 +12,27 @@ import ctypes # operates popup windows
 # NOTE: os.path.getctime(path) gets creation time on Windows
 # machines but gets last modification time on Linux machines
 
+
+def popup(msg : str, title : str) -> int:
+    """abstracts popup
+    
+    A function to handle the pop-up status windows
+    
+    Args:
+        msg (str): The main body of the message
+        title (str): The text that appears at the top of the window
+        
+    Returns:
+        int: Returns int code of which button was pressed
+    """
+
+    # the first zero specifies a pop-up window
+    # the second zero styles the window based on a hex code
+    # for more info:
+    # https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-messagebox
+    return ctypes.windll.user32.MessageBoxW(0, msg, title, 0x00000040)
+
+
 def check_path(path : str) -> bool:
     """checks the existence of a file
     
@@ -32,7 +53,6 @@ def main():
 if __name__ == '__main__':
     main()
 
-    # mymessage = 'A message'
-    # title = 'Popup window'
-    # popup = ctypes.windll.user32.MessageBoxW
-    # popup(0, mymessage, title, 0)
+    mymessage = 'A message'
+    title = 'Popup window'
+    print(popup(mymessage, title))
