@@ -10,6 +10,7 @@
 
 import os # used to get ctime
 import sys # handles early exits
+import re # regex used to parse date-time info from name
 import time # used to convert ctime to human-readable info
 import ctypes # operates popup windows
 import platform # used to prevent OSError with MessageBox
@@ -21,6 +22,7 @@ import platform # used to prevent OSError with MessageBox
 ### CONSTANTS
 
 INPUT_DIR = os.path.join('.', 'requires_sorting')
+UNSORTED_DIR = os.path.join('.', 'unsorted')
 IDYES = 6
 IDNO = 7
 MB_ICONASTERISK = 0x00000040
@@ -129,26 +131,37 @@ def main() -> None:
     # self-contained functions, early exits located here
     detect_input_dir(INPUT_DIR)
     confirm_program_start(INPUT_DIR)
+    
+    create_path(UNSORTED_DIR)
 
     successfully_sorted = 0
     unsorted = 0
     # moves files from INPUT_DIR to new location
     for file_basename in os.listdir(INPUT_DIR):
 
-        # checks if file is dir, skips is True
+        # generates relpath to be used during rest of loop
         file_relpath = os.path.join(INPUT_DIR, file_basename)
+
+        # checks if file is dir, skips is True
         if os.path.isdir(file_relpath):
             unsorted += 1
+            unsorted_relpath = os.path.join(UNSORTED_DIR, file_basename)
+            os.replace(file_relpath, unsorted_relpath)
             continue
 
-        # extracts time information from file
-        creation_time = os.path.getctime(file_relpath)
-        time_struct = time.localtime(creation_time)
+        # extracts time information from file based on ISO 8601 Basic
+        regex_iso8601 = re.findall('[12]\d{3}[0-2]\d[0-3]\d', file_basename)
+        if not regex_iso8601:
+            unsorted += 1
+            unsorted_relpath = os.path.join(UNSORTED_DIR, file_basename)
+            os.replace(file_relpath, unsorted_relpath)
+            continue
+        iso8601 = regex_iso8601[0] # YYYYMMDD
 
         # formats directory names
-        year_dir = time.strftime('%Y', time_struct)
-        month_dir = time.strftime('%Y_%m', time_struct)
-        day_dir = time.strftime('%Y_%m_%d', time_struct)
+        year_dir = iso8601[:4]
+        month_dir = f'{year_dir}_{iso8601[4:6]}'
+        day_dir = f'{month_dir}_{iso8601[6:]}'
 
         # creates new directory path
         new_dir_path = os.path.join(year_dir, month_dir, day_dir)
@@ -170,4 +183,3 @@ def main() -> None:
 
 if __name__ == '__main__':
     main()
-    
