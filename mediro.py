@@ -170,8 +170,4 @@ def main() -> None:
 
 if __name__ == '__main__':
     main()
-
-    # print(os.path.getctime('mediro.py'))
-
-    # os.makedirs('testdir/subdir')
-    # os.replace('test.txt', 'testdir/test.txt')
+    
