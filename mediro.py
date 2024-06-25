@@ -167,8 +167,15 @@ def main() -> None:
         new_dir_path = os.path.join(year_dir, month_dir, day_dir)
         create_path(new_dir_path)
 
-        # moves image to new directory
+        # checks if file already exists, renames to prevent overwriting file
         new_file_relpath = os.path.join(new_dir_path, file_basename)
+        root, ext = os.path.splitext(new_file_relpath)
+        duplicate_counter = 1
+        while os.path.exists(new_file_relpath):
+            new_file_relpath = f'{root}_({duplicate_counter}){ext}'
+            duplicate_counter += 1
+
+        # moves file to new directory
         os.replace(file_relpath, new_file_relpath)
 
         successfully_sorted += 1
