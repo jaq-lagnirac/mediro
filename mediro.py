@@ -100,17 +100,35 @@ def detect_input_dir() -> None:
 
     return None
 
-
-def main():
-    """THE MAIN FUNCTION"""
-
-    detect_input_dir() # self-contained function, early exit located here
+def confirm_program_start() -> None:
+    """handles popup confirmation
+    
+    A function which acts as a floodgate to the program,
+    asking the user for consent in order to minimize the
+    effects of a program misclick
+    
+    Args:
+        None
+        
+    Return:
+        None
+    """
 
     files_to_sort = len(os.listdir(INPUT_DIR))
     result = popup('Start-Up', f'{files_to_sort} files detected.\nBegin sort?', MB_YESNO)
     if result == IDNO:
         popup('Exit', 'Exiting program.')
         sys.exit()
+
+    return None
+
+
+def main() -> None:
+    """THE MAIN FUNCTION"""
+
+    # self-contained functions, early exits located here
+    detect_input_dir()
+    confirm_program_start()
 
     for file_basename in os.listdir(INPUT_DIR):
 
