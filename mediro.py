@@ -74,33 +74,33 @@ def create_path(path : str) -> None:
     return None
 
 
-def detect_input_dir() -> None:
+def detect_input_dir(input_dir : str) -> None:
     """handles input directory detection
     
     A function which groups together input directory actions
     
     Args:
-        None
+        input_dir (str): the relative path of the input directory
     
     Returns:
         None
     """
 
-    if not os.path.isdir(INPUT_DIR):
+    if not os.path.isdir(input_dir):
         result = popup('Error',
-                       f'Input subdirectory \"{INPUT_DIR}\" not found.\n' \
+                       f'Input subdirectory \"{input_dir}\" not found.\n' \
                        'Create subdirectory?',
                        MB_ICONWARNING | MB_YESNO)
         if result == IDYES:
-            create_path(INPUT_DIR)
-            popup('Update', f'Created \"{INPUT_DIR}\".\nExiting program.')
+            create_path(input_dir)
+            popup('Update', f'Created \"{input_dir}\".\nExiting program.')
         else:
             popup('Exit', 'Exiting program.')
         sys.exit()
 
     return None
 
-def confirm_program_start() -> None:
+def confirm_program_start(input_dir : str) -> None:
     """handles popup confirmation
     
     A function which acts as a floodgate to the program,
@@ -108,13 +108,13 @@ def confirm_program_start() -> None:
     effects of a program misclick
     
     Args:
-        None
+        input_dir (str): the relative path of the input directory
         
     Return:
         None
     """
 
-    files_to_sort = len(os.listdir(INPUT_DIR))
+    files_to_sort = len(os.listdir(input_dir))
     result = popup('Start-Up', f'{files_to_sort} files detected.\nBegin sort?', MB_YESNO)
     if result == IDNO:
         popup('Exit', 'Exiting program.')
@@ -127,13 +127,21 @@ def main() -> None:
     """THE MAIN FUNCTION"""
 
     # self-contained functions, early exits located here
-    detect_input_dir()
-    confirm_program_start()
+    detect_input_dir(INPUT_DIR)
+    confirm_program_start(INPUT_DIR)
 
+    successfully_sorted = 0
+    unsorted = 0
+    # moves files from INPUT_DIR to new location
     for file_basename in os.listdir(INPUT_DIR):
 
-        # extracts time information from file
+        # checks if file is dir, skips is True
         file_relpath = os.path.join(INPUT_DIR, file_basename)
+        if os.path.isdir(file_relpath):
+            unsorted += 1
+            continue
+
+        # extracts time information from file
         creation_time = os.path.getctime(file_relpath)
         time_struct = time.localtime(creation_time)
 
@@ -149,6 +157,15 @@ def main() -> None:
         # moves image to new directory
         new_file_relpath = os.path.join(new_dir_path, file_basename)
         os.replace(file_relpath, new_file_relpath)
+
+        successfully_sorted += 1
+    
+    popup('Complete',
+          'Program finished executing.\n' \
+          f'{successfully_sorted} files sorted.\n' \
+          f'{unsorted} files unsuccessfully sorted.\n\n' \
+          'Thank you for using Mediro!\n'\
+          'For more, check out github@jaq-lagnirac.')
 
 
 if __name__ == '__main__':
