@@ -1,1 +1,11 @@
+# testing libraries
+requires_sorting/
+20*/
+
+# virtual environment
 .venv
+
+# pyinstaller ignores
+build/
+dist/
+*.spec
