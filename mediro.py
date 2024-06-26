@@ -21,8 +21,8 @@ import platform # used to prevent OSError with MessageBox
 
 ### CONSTANTS
 
-INPUT_DIR = os.path.join('.', 'requires_sorting')
-UNSORTED_DIR = os.path.join('.', 'unsorted')
+INPUT_DIR = os.path.join('.', 'MEDIRO_requires_sorting')
+UNSORTED_DIR = os.path.join('.', 'MEDIRO_unsorted')
 IDYES = 6
 IDNO = 7
 MB_ICONASTERISK = 0x00000040

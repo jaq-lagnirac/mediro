@@ -1,5 +1,6 @@
 # testing libraries
-requires_sorting/
+MEDIRO_requires_sorting/
+MEDIRO_unsorted/
 20*/
 
 # virtual environment
