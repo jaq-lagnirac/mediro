@@ -1,3 +1,7 @@
+<div align="center">
+    <img src="images/logo-color.svg" width="500px" alt="Mediro Logo">
+</div>
+
 # mediro
 The MEdia DIRectory Organizer, a tool to partition a directory into subdirectories and sort files (originally for visual multimedia) based on time-of-creation.
 
