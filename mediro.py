@@ -11,7 +11,6 @@
 import os # used to get ctime
 import sys # handles early exits
 import re # regex used to parse date-time info from name
-import time # used to convert ctime to human-readable info
 import ctypes # operates popup windows
 import platform # used to prevent OSError with MessageBox
 
@@ -24,13 +23,25 @@ import platform # used to prevent OSError with MessageBox
 INPUT_DIR = os.path.join('.', 'MEDIRO_requires_sorting')
 UNSORTED_DIR = os.path.join('.', 'MEDIRO_unsorted')
 IDYES = 6
-IDNO = 7
 MB_ICONASTERISK = 0x00000040
 MB_ICONWARNING = 0x00000030
 MB_YESNO = 0x00000004
 
 
 ### FUNCTIONS
+
+def add_plural_s(count : int) -> str:
+    """determines if an extra S should be added
+    
+    Args:
+        count (int): the number to be pluraled
+    Return:
+        str: Returns an empty string if 1, s otherwise
+    """
+
+    if count == 1:
+        return ''
+    return 's'
 
 def popup(title : str, msg : str, modifier : int = MB_ICONASTERISK) -> int:
     """abstracts popup
@@ -117,8 +128,10 @@ def confirm_program_start(input_dir : str) -> None:
     """
 
     files_to_sort = len(os.listdir(input_dir))
-    result = popup('Start-Up', f'{files_to_sort} files detected.\nBegin sort?', MB_YESNO)
-    if result == IDNO:
+    result = popup('Start-Up',
+                   f'{files_to_sort} file{add_plural_s(files_to_sort)} detected.\nBegin sort?',
+                   MB_YESNO)
+    if result != IDYES: # should catch exiting out of prompt using the X as well
         popup('Exit', 'Exiting program.')
         sys.exit()
 
@@ -170,10 +183,25 @@ def main() -> None:
         # checks if file already exists, renames to prevent overwriting file
         new_file_relpath = os.path.join(new_dir_path, file_basename)
         root, ext = os.path.splitext(new_file_relpath)
-        duplicate_counter = 1
+        duplicate_counter = 0
         while os.path.exists(new_file_relpath):
-            new_file_relpath = f'{root}_({duplicate_counter}){ext}'
+            original_relpath = new_file_relpath
+            original_basename = os.path.basename(new_file_relpath)
             duplicate_counter += 1
+            new_file_relpath = f'{root}_({duplicate_counter}){ext}'
+
+            # asks consent of user to rename file
+            result = popup(f'Warning: {original_relpath}',
+                           f'\"{original_basename}\" already exists in {new_dir_path}.\n\n' \
+                           f'Click YES to rename file to \"{new_file_relpath}\".\n\n' \
+                           f'Click NO to move to {UNSORTED_DIR}.\n' \
+                           'This action DOES NOT check the target directory for duplicate files. ' \
+                           'There is NO overwrite protection for this directory.',
+                           MB_ICONWARNING | MB_YESNO)
+            if result != IDYES: # should catch exiting out of prompt using the X as well
+                new_file_relpath = os.path.join(UNSORTED_DIR, original_basename)
+                unsorted += 1
+                break
 
         # moves file to new directory
         os.replace(file_relpath, new_file_relpath)
@@ -181,11 +209,13 @@ def main() -> None:
         successfully_sorted += 1
     
     popup('Complete',
-          'Program finished executing.\n' \
-          f'{successfully_sorted} files sorted.\n' \
-          f'{unsorted} files unsuccessfully sorted.\n\n' \
-          'Thank you for using Mediro!\n'\
+          'Program finished executing.\n\n' \
+          f'{successfully_sorted} file{add_plural_s(successfully_sorted)} sorted.\n' \
+          f'{unsorted} file{add_plural_s(unsorted)} unsuccessfully sorted.\n\n' \
+          'Thank you for using Mediro!\n' \
           'For more, check out github@jaq-lagnirac.')
+    
+    return
 
 
 if __name__ == '__main__':
