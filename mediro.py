@@ -11,11 +11,13 @@
 import os # used to get ctime
 import sys # handles early exits
 import re # regex used to parse date-time info from name
+import time # used for date/time functions
 import ctypes # operates popup windows
 import platform # used to prevent OSError with MessageBox
 
 # NOTE: os.path.getctime(path) gets creation time on Windows
-# machines but gets last modification time on Linux machines
+# machines but gets last modification time on Linux machines.
+# At least that's what it said.
 
 
 ### CONSTANTS
@@ -113,6 +115,7 @@ def detect_input_dir(input_dir : str) -> None:
 
     return None
 
+
 def confirm_program_start(input_dir : str) -> None:
     """handles popup confirmation
     
@@ -162,22 +165,41 @@ def main() -> None:
             os.replace(file_relpath, unsorted_relpath)
             continue
 
-        # extracts time information from file based on ISO 8601 Basic
-        regex_iso8601 = re.findall('[12]\d{3}[0-2]\d[0-3]\d', file_basename)
-        if not regex_iso8601:
+        # extracts time information from file based on ISO 8601
+        iso8601_extended = re.findall('[12]\d{3}-[0-2]\d-[0-3]\d', file_basename)
+        iso8601_basic = re.findall('[12]\d{3}[0-2]\d[0-3]\d', file_basename)
+        
+        # logic for extracting dir names, gives preference to ISO 8601 Extended
+        year_dir = month_dir = day_dir = None # scope resolution
+        if iso8601_extended:
+            iso8601 = iso8601_extended[0] # YYYY-MM-DD
+            # formats directory names
+            year_dir = iso8601[:4]
+            month_dir = f'{year_dir}_{iso8601[5:7]}'
+            day_dir = f'{month_dir}_{iso8601[8:]}'
+        elif iso8601_basic:
+            iso8601 = iso8601_basic[0] # YYYYMMDD
+            # formats directory names
+            year_dir = iso8601[:4]
+            month_dir = f'{year_dir}_{iso8601[4:6]}'
+            day_dir = f'{month_dir}_{iso8601[6:]}'
+        else:
             unsorted += 1
             unsorted_relpath = os.path.join(UNSORTED_DIR, file_basename)
             os.replace(file_relpath, unsorted_relpath)
             continue
-        iso8601 = regex_iso8601[0] # YYYYMMDD
 
-        # formats directory names
-        year_dir = iso8601[:4]
-        month_dir = f'{year_dir}_{iso8601[4:6]}'
-        day_dir = f'{month_dir}_{iso8601[6:]}'
+        # checks to ensure date is not in the future,
+        # moves to unsorted directory if True
+        today = time.strftime('%Y_%m_%d')
+        if day_dir > today:
+            unsorted += 1
+            unsorted_relpath = os.path.join(UNSORTED_DIR, file_basename)
+            os.replace(file_relpath, unsorted_relpath)
+            continue
 
         # creates new directory path
-        new_dir_path = os.path.join(year_dir, month_dir, day_dir)
+        new_dir_path = os.path.join('.', year_dir, month_dir, day_dir)
         create_path(new_dir_path)
 
         # checks if file already exists, renames to prevent overwriting file
