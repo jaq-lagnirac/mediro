@@ -6,6 +6,9 @@ MEDIRO_unsorted/
 # virtual environment
 .venv
 
+# imports ignores
+__pycache__/
+
 # pyinstaller ignores
 build/
 dist/
