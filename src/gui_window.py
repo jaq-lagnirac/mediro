@@ -24,45 +24,6 @@ LOGO_PATH = resource_path(os.path.join('.', 'images', 'logo-color.png'))
 
 ### FUNCTIONS ###
 
-def insert_main_logo(root : tk.Tk) -> None:
-    """Puts up splash image down left-hand side of main window.
-    
-    A function to handle the logo image on the main page.
-    
-    Args:
-        root (tk.Tk): Tkinter window to be edited.
-    
-    Returns:
-        None
-    """
-
-    # opens and resizes image
-    IMAGE_MULTIPLIER = 0.2
-    image = Image.open(LOGO_PATH)
-    image = image.resize(size=[int(IMAGE_MULTIPLIER * length) \
-                               for length in image.size])
-    
-    # converts image to format usable by tkinter
-    IMAGE_ROW = 0
-    IMAGE_COLUMN = 0
-    ARBITRARILY_LARGE_NUM = 100 # to take up entire left side
-    YPAD_TOP = 20
-    YPAD_BOT = 20
-    logo = ImageTk.PhotoImage(image)
-    tk.Label(root, image=logo).grid(row=IMAGE_ROW,
-                                    column=IMAGE_COLUMN,
-                                    rowspan=ARBITRARILY_LARGE_NUM,
-                                    pady=(YPAD_TOP, YPAD_BOT))
-    # label = tk.Label(root, text='test')
-    # label.grid(row=1, column=0)
-
-    return root
-
-
-def test(root):
-    label = tk.Label(root, text='test')
-    label.grid(row=1, column=0)
-
 
 def generate_main_window() -> tk.Tk:
     """Generates GUI window to display to the user.
