@@ -11,7 +11,7 @@ import os
 import tkinter as tk
 from PIL import ImageTk, Image
 from mediro_paths import resource_path
-from gui_widgets import MainLogo
+from gui_widgets import MainLogo, TextBoxQuestion
 
 
 ### GLOBAL CONSTANTS / VARIABLES ###
@@ -82,24 +82,13 @@ def generate_main_window() -> tk.Tk:
     root.resizable(False, False)
     root.title('Mediro')
 
-    # IMAGE_MULTIPLIER = 0.2
-    # image = Image.open(LOGO_PATH)
-    # image = image.resize(size=[int(IMAGE_MULTIPLIER * length) \
-    #                            for length in image.size])
-    
-    # # converts image to format usable by tkinter
-    # IMAGE_ROW = 0
-    # IMAGE_COLUMN = 0
-    # ARBITRARILY_LARGE_NUM = 100 # to take up entire left side
-    # YPAD_TOP = 20
-    # YPAD_BOT = 20
-    # logo = ImageTk.PhotoImage(image)
-    # tk.Label(root, image=logo).grid(row=IMAGE_ROW,
-    #                                 column=IMAGE_COLUMN,
-    #                                 rowspan=ARBITRARILY_LARGE_NUM,
-    #                                 pady=(YPAD_TOP, YPAD_BOT))
-
     MainLogo(root)
+
+    TextBoxQuestion(root, text='test12345', row=0, column=1)
+    TextBoxQuestion(root, text='test2', row=0, column=2)
+    TextBoxQuestion(root, text='test3', row=1, column=1)
+    TextBoxQuestion(root, text='test4', row=1, column=2)
+    
 
     root.mainloop()
 
