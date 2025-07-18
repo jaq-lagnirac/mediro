@@ -8,6 +8,7 @@
 
 import os
 import tkinter as tk
+from tkinter import ttk
 from PIL import ImageTk, Image
 from mediro_paths import resource_path
 
@@ -24,7 +25,7 @@ ARBITRARILY_LARGE_NUM = 100 # to take up entire left side
 
 ### CLASSES ###
 
-class MainLogo(tk.Frame):
+class MainLogo(ttk.Frame):
 
     _LOGO_PATH = resource_path(os.path.join('.', 'images', 'logo-color.png'))
     _LOGO_MULTIPLIER = 0.2
@@ -36,10 +37,15 @@ class MainLogo(tk.Frame):
 
     def __init__(self,
                  master=None):
-            
+
+            # configures to window, adds styles            
             super().__init__(master)
+            logo_style = ttk.Style()
+            logo_style.configure('Logo.TFrame', background=self._LOGO_COLOR)
+            logo_style.configure('Logo.TLabel', background=self._LOGO_COLOR)
+
             # positions tk.Frame in window
-            self.config(background=self._LOGO_COLOR)
+            self.config(style='Logo.TFrame')
             self.grid(row=ORIGIN_ROW,
                       column=ORIGIN_COL,
                       rowspan=ARBITRARILY_LARGE_NUM,
@@ -53,12 +59,14 @@ class MainLogo(tk.Frame):
 
             # puts displays image in frame
             image = ImageTk.PhotoImage(image)
-            self.logo = tk.Label(self, image=image, background=self._LOGO_COLOR)
+            self.logo = ttk.Label(self,
+                                  image=image,
+                                  style='Logo.TLabel')
             self.logo.image = image
             self.logo.grid(pady=(self._PADY_TOP, self._PADY_BOT))
             
 
-class TextBoxQuestion(tk.Frame):
+class TextBoxQuestion(ttk.Frame):
 
     _LABEL_WIDTH = 20
     _TEXTBOX_WIDTH = 30
@@ -81,23 +89,25 @@ class TextBoxQuestion(tk.Frame):
                   column=self.col,
                   padx=(self._FRAME_PADX_LEFT, self._FRAME_PADX_RIGHT))
         
+        # label asking the user a question
         LABEL_ROW = ORIGIN_ROW
         LABEL_COL = ORIGIN_COL
-        self.label = tk.Label(self,
-                              width=self._LABEL_WIDTH,
-                              text=self.text,
-                              anchor='w',
-                              justify='left')
+        self.label = ttk.Label(self,
+                               width=self._LABEL_WIDTH,
+                               text=self.text,
+                               anchor='w',
+                               justify='left')
         self.label.grid(row=LABEL_ROW,
                         column=LABEL_COL,
                         sticky='W')
         
+        # textbox collecting the user input
         TEXTBOX_ROW = ORIGIN_ROW
         TEXTBOX_COL = ORIGIN_COL + 1
         self.text_str = tk.StringVar()
-        self.textbox = tk.Entry(self,
-                                width=self._TEXTBOX_WIDTH,
-                                textvariable=self.text_str)
+        self.textbox = ttk.Entry(self,
+                                 width=self._TEXTBOX_WIDTH,
+                                 textvariable=self.text_str)
         self.textbox.grid(row=TEXTBOX_ROW,
                           column=TEXTBOX_COL,
                           sticky='NESW')

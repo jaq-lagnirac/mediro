@@ -7,10 +7,7 @@
 
 ### LIBRARIES / PACKAGES ###
 
-import os
 import tkinter as tk
-from PIL import ImageTk, Image
-from mediro_paths import resource_path
 from gui_widgets import MainLogo, TextBoxQuestion
 
 
@@ -19,7 +16,6 @@ from gui_widgets import MainLogo, TextBoxQuestion
 FONT_NAME = 'Verdana'
 FONT_SIZE = 10
 FONT_INFO = (FONT_NAME, FONT_SIZE)
-LOGO_PATH = resource_path(os.path.join('.', 'images', 'logo-color.png'))
 
 
 ### FUNCTIONS ###
