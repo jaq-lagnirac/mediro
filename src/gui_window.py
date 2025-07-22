@@ -46,7 +46,8 @@ def generate_main_window() -> tk.Tk:
     TextBoxQuestion(root, question='test3', row=1, column=1)
     TextBoxQuestion(root, question='test4', row=1, column=2)
 
-    FileQuestion(root, question='file', row=2, column=1)    
+    FileQuestion(root, question='file', row=2, column=1, textbox_width=50, col_span=2)
+    FileQuestion(root, question='dir', row=3, column=1, textbox_width=50, col_span=2, is_dir_search=True)
 
 
     root.mainloop()

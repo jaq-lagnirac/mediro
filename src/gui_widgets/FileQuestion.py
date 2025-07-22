@@ -27,6 +27,7 @@ class FileQuestion(TextBoxQuestion):
                  label_width : int = TextBoxQuestion._DEFAULT_LABEL_WIDTH,
                  textbox_width : int = TextBoxQuestion._DEFAULT_TEXTBOX_WIDTH \
                     - _DEFAULT_BUTTON_WIDTH,
+                 col_span : int = TextBoxQuestion._DEFAULT_COL_SPAN,
                  button_width : int = _DEFAULT_BUTTON_WIDTH,
                  is_dir_search : bool = False) -> None:
         """Initializes the frame to take user input for a directory.
@@ -43,6 +44,7 @@ class FileQuestion(TextBoxQuestion):
             column (int): The placement column of the created object.
             label_width (int): The width of the question Label object.
             textbox_width (int): The width of the Entry object.
+            col_span (int): The number of columns that the object takes up.
             button_width (int): The width of the Button object to bring up
                 a file dialog.
             is_dir_search (bool): If True, will pull up dialog for directory
@@ -51,18 +53,17 @@ class FileQuestion(TextBoxQuestion):
         Returns:
             None
         """
-        
+
         super().__init__(master,
                          question,
                          status,
                          row,
                          column,
                          label_width,
-                         textbox_width)
+                         textbox_width,
+                         col_span)
         self.button_width = button_width + 1 # extra 1 centers a bit better
         self.is_dir_search = is_dir_search
-
-        # toggles between file search and dir search
 
         # positioning button to the right of the textbox
         FILE_DIALOG_ROW = TextBoxQuestion._ORIGIN_ROW
@@ -93,6 +94,8 @@ class FileQuestion(TextBoxQuestion):
         if self.filepath: # file successfully chosen
             self.textbox.delete(0, 'end')
             self.textbox.insert(0, self.filepath)
+            self.status_label.config(text='File successfully chosen.',
+                                     foreground=TextBoxQuestion._SUCCESS_COL)
         else: # most likely premature exit
             self.status_label.config(text='File not chosen.',
                                      foreground=TextBoxQuestion._FAIL_COL)

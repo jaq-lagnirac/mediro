@@ -18,6 +18,7 @@ class TextBoxQuestion(ttk.Frame):
     _ORIGIN_COL = 0
     _DEFAULT_LABEL_WIDTH = 20
     _DEFAULT_TEXTBOX_WIDTH = 30
+    _DEFAULT_COL_SPAN = 1
     _FRAME_PADX_LEFT = 0
     _FRAME_PADX_RIGHT = 10
     _SUCCESS_COL = '#00dd00'
@@ -33,7 +34,8 @@ class TextBoxQuestion(ttk.Frame):
                  row : int = _ORIGIN_ROW,
                  column : int = (_ORIGIN_COL + 1),
                  label_width : int = _DEFAULT_LABEL_WIDTH,
-                 textbox_width : int = _DEFAULT_TEXTBOX_WIDTH) -> None:
+                 textbox_width : int = _DEFAULT_TEXTBOX_WIDTH,
+                 col_span : int = _DEFAULT_COL_SPAN) -> None:
         """Initializes the frame to take user input.
         
         A function which handles the labeling and creation
@@ -47,11 +49,12 @@ class TextBoxQuestion(ttk.Frame):
             column (int): The placement column of the created object.
             label_width (int): The width of the question Label object.
             textbox_width (int): The width of the Entry object.
+            col_span (int): The number of columns that the object takes up.
             
         Returns:
             None
         """
-        
+
         super().__init__(master)
 
         self.question = question
@@ -60,11 +63,14 @@ class TextBoxQuestion(ttk.Frame):
         self.row = row
         self.label_width = label_width
         self.textbox_width = textbox_width
+        self.col_span = col_span
 
         # positions tk.Frame in window
         self.grid(row=self.row,
                   column=self.col,
-                  padx=(self._FRAME_PADX_LEFT, self._FRAME_PADX_RIGHT))
+                  columnspan=self.col_span,
+                  padx=(self._FRAME_PADX_LEFT, self._FRAME_PADX_RIGHT),
+                  sticky='W')
         
         # label asking the user a question
         QUESTION_LABEL_ROW = self._ORIGIN_ROW
