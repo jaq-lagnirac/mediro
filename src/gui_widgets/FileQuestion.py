@@ -4,6 +4,7 @@
 # a file or directory, either through the use of the
 # textbox or a pop-up file explorer window
 
+import os
 import tkinter as tk
 from tkinter import ttk
 from tkinter import filedialog
@@ -77,25 +78,63 @@ class FileQuestion(TextBoxQuestion):
                                   sticky='NESW')
         
 
+    def validate_input(self,
+                       *entry : tk.Event) -> bool:
+        """Validates existence of filepath before execution.
+        
+        A function which validates the filepath user input.
+        
+        Args:
+            entry (tk.Event): The user-inputted entry, not interacted with.
+        
+        Returns:
+            bool: Returns True if the filepath exists, False otherwise.
+        """
+
+        filepath_input = self.textbox.get()
+        if os.path.exists(filepath_input):
+            self.status_label.config(text='Valid filepath.',
+                                     foreground=self._SUCCESS_COL)
+            return True
+        
+        self.status_label.config(text='Filepath not found.',
+                                 foreground=self._FAIL_COL)
+        return False
+
+
     def _get_path_from_dialog(self) -> None:
-        """Updates the output string with filename dialog"""
+        """Updates the output string with filename dialog.
+        
+        A function which handles filedialog and displays
+        the chosen filepath to the user through the Entry
+        object.
+
+        Args:
+            None
+        
+        Returns:
+            None
+        """
 
         self.filepath = None # scope resolution
+        file_type = None # scope resolution
         if self.is_dir_search:
             self.filepath = filedialog.askdirectory(
             title=self.question,
-        )
+            )
+            file_type = 'Directory'
         else: # is a file search
             self.filepath = filedialog.askopenfilename(
                 title=self.question,
                 filetypes=[("All files", "*.*")]
             )
+            file_type = 'File'
 
         if self.filepath: # file successfully chosen
             self.textbox.delete(0, 'end')
             self.textbox.insert(0, self.filepath)
-            self.status_label.config(text='File successfully chosen.',
+            self.status_label.config(text=f'{file_type} successfully chosen.',
                                      foreground=TextBoxQuestion._SUCCESS_COL)
         else: # most likely premature exit
-            self.status_label.config(text='File not chosen.',
+            self.status_label.config(text=f'{file_type} not chosen.',
                                      foreground=TextBoxQuestion._FAIL_COL)

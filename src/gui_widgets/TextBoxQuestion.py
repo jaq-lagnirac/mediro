@@ -19,7 +19,7 @@ class TextBoxQuestion(ttk.Frame):
     _DEFAULT_LABEL_WIDTH = 20
     _DEFAULT_TEXTBOX_WIDTH = 30
     _DEFAULT_COL_SPAN = 1
-    _FRAME_PADX_LEFT = 0
+    _FRAME_PADX_LEFT = 10
     _FRAME_PADX_RIGHT = 10
     _SUCCESS_COL = '#00dd00'
     _FAIL_COL = '#ff0000'
@@ -124,7 +124,7 @@ class TextBoxQuestion(ttk.Frame):
         is required.
 
         Args:
-            entry (tk.Event): The user-inputted entry, not interacted with
+            entry (tk.Event): The user-inputted entry, not interacted with.
 
         Returns:
             bool: Returns True no matter the input.
