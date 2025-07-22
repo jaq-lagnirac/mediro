@@ -4,22 +4,15 @@
 # Formats main window that is displayed to the user,
 # handles GUI window functionalities
 
-
-### LIBRARIES / PACKAGES ###
-
 import tkinter as tk
+from tkinter import ttk
 from gui_widgets import *
 
-
-### GLOBAL CONSTANTS / VARIABLES ###
-
+ORIGIN_ROW = 0
+ORIGIN_COL = 1 # MainLogo at (0, 0), shifted to column 1
 FONT_NAME = 'Verdana'
 FONT_SIZE = 10
 FONT_INFO = (FONT_NAME, FONT_SIZE)
-
-
-### FUNCTIONS ###
-
 
 def generate_main_window() -> tk.Tk:
     """Generates GUI window to display to the user.
@@ -39,22 +32,24 @@ def generate_main_window() -> tk.Tk:
     root.resizable(False, False)
     root.title('Mediro')
 
-    MainLogo(root)
+    MainLogo(root) # at origin (0, 0)
 
-    TextBoxQuestion(root, question='test12345', row=0, column=1)
-    TextBoxQuestion(root, question='test2', row=0, column=2)
-    TextBoxQuestion(root, question='test3', row=1, column=1)
-    TextBoxQuestion(root, question='test4', row=1, column=2)
+    spacer = ttk.Label(root,
+                       text='')
+    spacer.grid(row=ORIGIN_ROW,
+                column=ORIGIN_COL,
+                columnspan=100,
+                pady=(100,0))
+    
+    FileQuestion(root, question='file', row=(ORIGIN_ROW + 1), column=ORIGIN_COL, textbox_width=50, col_span=2)
+    FileQuestion(root, question='dir', row=(ORIGIN_ROW + 2), column=ORIGIN_COL, textbox_width=50, col_span=2, is_dir_search=True)
 
-    FileQuestion(root, question='file', row=2, column=1, textbox_width=50, col_span=2)
-    FileQuestion(root, question='dir', row=3, column=1, textbox_width=50, col_span=2, is_dir_search=True)
 
-
-    root.mainloop()
-
+    return root
 
 # code to test window generation
 if __name__ == "__main__":
-    generate_main_window()
+    test = generate_main_window()
+    test.mainloop()
 
 __all__ = ['generate_main_window']

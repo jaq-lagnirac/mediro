@@ -70,7 +70,7 @@ class TextBoxQuestion(ttk.Frame):
                   column=self.col,
                   columnspan=self.col_span,
                   padx=(self._FRAME_PADX_LEFT, self._FRAME_PADX_RIGHT),
-                  sticky='W')
+                  sticky='NW')
         
         # label asking the user a question
         QUESTION_LABEL_ROW = self._ORIGIN_ROW
