@@ -8,7 +8,7 @@
 ### LIBRARIES / PACKAGES ###
 
 import tkinter as tk
-from gui_widgets import MainLogo, TextBoxQuestion
+from gui_widgets import *
 
 
 ### GLOBAL CONSTANTS / VARIABLES ###
@@ -41,11 +41,13 @@ def generate_main_window() -> tk.Tk:
 
     MainLogo(root)
 
-    TextBoxQuestion(root, text='test12345', row=0, column=1)
-    TextBoxQuestion(root, text='test2', row=0, column=2)
-    TextBoxQuestion(root, text='test3', row=1, column=1)
-    TextBoxQuestion(root, text='test4', row=1, column=2)
-    
+    TextBoxQuestion(root, question='test12345', row=0, column=1)
+    TextBoxQuestion(root, question='test2', row=0, column=2)
+    TextBoxQuestion(root, question='test3', row=1, column=1)
+    TextBoxQuestion(root, question='test4', row=1, column=2)
+
+    FileQuestion(root, question='file', row=2, column=1)    
+
 
     root.mainloop()
 
