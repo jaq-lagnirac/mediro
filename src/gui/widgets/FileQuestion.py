@@ -77,6 +77,8 @@ class FileQuestion(TextBoxQuestion):
                                   column=FILE_DIALOG_COL,
                                   sticky='NESW')
         
+        return
+        
 
     def validate_input(self,
                        *entry : tk.Event) -> bool:
@@ -91,7 +93,7 @@ class FileQuestion(TextBoxQuestion):
             bool: Returns True if the filepath exists, False otherwise.
         """
 
-        filepath_input = self.textbox.get()
+        filepath_input = self.get_textbox()
         if os.path.exists(filepath_input):
             self.status_label.config(text='Valid filepath.',
                                      foreground=self._SUCCESS_COL)
@@ -131,9 +133,11 @@ class FileQuestion(TextBoxQuestion):
             file_type = 'File'
 
         if self.filepath: # file successfully chosen
-            self.change_textbox(self.filepath)
+            self.set_textbox(self.filepath)
             self.status_label.config(text=f'{file_type} successfully chosen.',
                                      foreground=TextBoxQuestion._SUCCESS_COL)
         else: # most likely premature exit
             self.status_label.config(text=f'{file_type} not chosen.',
                                      foreground=TextBoxQuestion._FAIL_COL)
+            
+        return

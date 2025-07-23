@@ -113,8 +113,10 @@ class TextBoxQuestion(ttk.Frame):
                                column=STATUS_LABEL_COL,
                                sticky='NESW')
         
+        return
+        
     
-    def change_textbox(self, text : str) -> None:
+    def set_textbox(self, text : str) -> None:
         """Changes text in user input textbox.
         
         A function which handles the clearing and insertion
@@ -129,6 +131,23 @@ class TextBoxQuestion(ttk.Frame):
         """
         self.textbox.delete(0, 'end')
         self.textbox.insert(0, text)
+        return
+    
+
+    def get_textbox(self) -> str:
+        """Retrieves text in user input textbox.
+        
+        A function which handles the retrieval
+        of text, used for processing further down
+        the program execution.
+        
+        Args:
+            None
+        
+        Returns:
+            str: Returns string inputted by a user.
+        """
+        return self.textbox.get()
 
 
     def validate_input(self,

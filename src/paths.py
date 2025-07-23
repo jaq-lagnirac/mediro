@@ -5,9 +5,6 @@
 # directory pathings both on compilation and during
 # program execution
 
-
-### LIBRARIES / PACKAGES ###
-
 import os
 import sys
 
@@ -52,6 +49,6 @@ def create_path(path : str) -> None:
     if not os.path.exists(path):
         os.makedirs(path)
 
-    return None
+    return
 
 __all__ = ['resource_path', 'create_path']

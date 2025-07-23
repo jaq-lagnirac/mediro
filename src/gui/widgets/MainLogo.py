@@ -7,7 +7,7 @@ import os
 import tkinter as tk
 from tkinter import ttk
 from PIL import ImageTk, Image
-from mediro_paths import resource_path
+from paths import resource_path
 
 class MainLogo(ttk.Frame):
 
@@ -67,3 +67,5 @@ class MainLogo(ttk.Frame):
                               style='Logo.TLabel')
         self.logo.image = image
         self.logo.grid(pady=(self._PADY_TOP, self._PADY_BOT))
+
+        return
