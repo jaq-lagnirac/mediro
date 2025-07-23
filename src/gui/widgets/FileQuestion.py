@@ -131,8 +131,7 @@ class FileQuestion(TextBoxQuestion):
             file_type = 'File'
 
         if self.filepath: # file successfully chosen
-            self.textbox.delete(0, 'end')
-            self.textbox.insert(0, self.filepath)
+            self.change_textbox(self.filepath)
             self.status_label.config(text=f'{file_type} successfully chosen.',
                                      foreground=TextBoxQuestion._SUCCESS_COL)
         else: # most likely premature exit

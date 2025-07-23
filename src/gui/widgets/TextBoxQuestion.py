@@ -112,6 +112,23 @@ class TextBoxQuestion(ttk.Frame):
         self.status_label.grid(row=STATUS_LABEL_ROW,
                                column=STATUS_LABEL_COL,
                                sticky='NESW')
+        
+    
+    def change_textbox(self, text : str) -> None:
+        """Changes text in user input textbox.
+        
+        A function which handles the clearing and insertion
+        of text, often used to initialize defaults or inputs
+        from external sources (e.g. file dialogs).
+        
+        Args:
+            text (str): The text string to be inserted.
+        
+        Returns:
+            None
+        """
+        self.textbox.delete(0, 'end')
+        self.textbox.insert(0, text)
 
 
     def validate_input(self,
