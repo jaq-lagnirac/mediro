@@ -44,6 +44,25 @@ def create_default_config() -> None:
     
     return
 
+def read_config() -> dict:
+    """Reads in values from JSON file.
+    
+    A function which reads in the configuration values from a
+    config.json file in the working directory and reads them
+    into a local dictionary.
+    
+    Args:
+        None
+    
+    Returns:
+        dict: Returns a dictionary of configuration values.
+    """
+
+    config_values = None # scope resolution
+    with open(_CONFIG_NAME, 'r') as input_file:
+        config_values = json.load(input_file)
+    return config_values
+
 def save_config(input_values : dict) -> None:
     """Takes new values and saves to configuration file.
     
@@ -62,4 +81,4 @@ def save_config(input_values : dict) -> None:
         json.dump(input_values, output_file, indent=_INDENT)
     return
 
-__all__ = ['create_default_config', 'save_config']
+__all__ = ['create_default_config', 'read_config', 'save_config']
