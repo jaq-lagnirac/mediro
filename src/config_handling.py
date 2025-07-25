@@ -13,12 +13,15 @@ _CONFIG_NAME = '.MEDIRO.config.json'
 _DEFAULT_CONFIG_NAME = resource_path('default.config.json')
 _INDENT = 2
 
-def create_default_config() -> None:
+def _create_default_config() -> None:
     """Creates new config.json if none are detected.
     
     A function which looks for a configuration JSON file
     tied to Mediro and, if none is detected, generates
     one in the same directory as the application.
+
+    Ran before most if not all functions to ensure there
+    is a proper and valid target for config file handling.
     
     Args:
         None
@@ -63,6 +66,7 @@ def read_config() -> dict:
         dict: Returns a dictionary of configuration values.
     """
 
+    _create_default_config()
     config_values = None # scope resolution
     with open(_CONFIG_NAME, 'r') as input_file:
         config_values = json.load(input_file)
@@ -82,8 +86,9 @@ def save_config(input_values : dict) -> None:
         None
     """
 
+    _create_default_config()
     with open(_CONFIG_NAME, 'w') as output_file:
         json.dump(input_values, output_file, indent=_INDENT)
     return
 
-__all__ = ['create_default_config', 'read_config', 'save_config']
+__all__ = ['read_config', 'save_config']

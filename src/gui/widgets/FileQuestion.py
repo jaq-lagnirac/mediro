@@ -56,7 +56,7 @@ class FileQuestion(TextBoxQuestion):
             None
         """
 
-        super().__init__(master=master,
+        super().__init__(master,
                          question=question,
                          status=status,
                          row=row,
