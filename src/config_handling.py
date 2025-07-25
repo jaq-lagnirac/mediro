@@ -34,6 +34,11 @@ def create_default_config() -> None:
     with open(_DEFAULT_CONFIG_NAME, 'r') as default_file:
         default_values = json.load(default_file)
 
+    keys_to_add_cwd = default_values['keys_to_add_cwd']
+    for key in keys_to_add_cwd:
+        basename = default_values[key]
+        default_values[key] = os.path.join(os.getcwd(), basename)
+
     with open(_CONFIG_NAME, 'w') as output_file:
         json.dump(default_values, output_file, indent=_INDENT)
 

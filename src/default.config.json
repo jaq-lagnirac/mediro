@@ -1,4 +1,8 @@
 {
   "input_dir" : "MEDIRO_requires_sorting",
-  "unsorted_dir" : "MEDIRO_unsorted"
+  "unsorted_dir" : "MEDIRO_unsorted",
+  "keys_to_add_cwd" : [
+    "input_dir",
+    "unsorted_dir"
+  ]
 }
