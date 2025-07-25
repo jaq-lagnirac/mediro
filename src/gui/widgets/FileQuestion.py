@@ -21,6 +21,7 @@ class FileQuestion(TextBoxQuestion):
 
     def __init__(self,
                  master : tk.Tk = None,
+                 *, # requires keyword arguments
                  question : str = '',
                  status : str = '',
                  row : int = TextBoxQuestion._ORIGIN_ROW,
@@ -55,14 +56,14 @@ class FileQuestion(TextBoxQuestion):
             None
         """
 
-        super().__init__(master,
-                         question,
-                         status,
-                         row,
-                         column,
-                         label_width,
-                         textbox_width,
-                         col_span)
+        super().__init__(master=master,
+                         question=question,
+                         status=status,
+                         row=row,
+                         column=column,
+                         label_width=label_width,
+                         textbox_width=textbox_width,
+                         col_span=col_span)
         self.button_width = button_width + 1 # extra 1 centers a bit better
         self.is_dir_search = is_dir_search
 

@@ -29,6 +29,7 @@ class TextBoxQuestion(ttk.Frame):
 
     def __init__(self,
                  master : tk.Tk = None,
+                 *, # requires keyword arguments
                  question : str = '',
                  status : str = '',
                  row : int = _ORIGIN_ROW,
