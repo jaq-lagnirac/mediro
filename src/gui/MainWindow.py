@@ -91,10 +91,10 @@ class MainWindow(tk.Tk):
             None
         """
 
-        self.config = {
-            'input_dir' : self.input_dir_qn.get_textbox(),
-            'unsorted_dir' : self.input_dir_qn.get_textbox()
-        }
+        self.config['input_dir'] = \
+            self.input_dir_qn.get_textbox()
+        self.config['unsorted_dir'] = \
+            self.input_dir_qn.get_textbox()
         save_config(self.config)
 
         return
