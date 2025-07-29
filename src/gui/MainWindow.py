@@ -41,6 +41,21 @@ class MainWindow(tk.Tk):
         super().__init__()
         self.resizable(False, False)
         self.title('Mediro')
+        self._populate_window()
+        self._populate_config_values()
+
+    def _populate_window(self) -> None:
+        """Creates objects in main window.
+        
+        A function which organizes the creation of objects
+        after the main Tkinter window is created.
+        
+        Args:
+            None
+            
+        Returns:
+            None
+        """
 
         MainLogo(self) # at origin (0, 0)
 
@@ -52,29 +67,53 @@ class MainWindow(tk.Tk):
                          pady=50)
         
         self.input_dir_qn = FileQuestion(self,
-                                         question='file',
+                                         question='Input Directory:',
                                          row=(self._ORIGIN_ROW + 1),
                                          column=self._ORIGIN_COL,
                                          textbox_width=50,
-                                         col_span=2)
+                                         col_span=2,
+                                         is_dir_search=True)
+        self.output_dir_qn = FileQuestion(self,
+                                          question='Output Directory:',
+                                          row=(self._ORIGIN_ROW + 2),
+                                          column=self._ORIGIN_COL,
+                                          textbox_width=50,
+                                          col_span=2,
+                                          is_dir_search=True)
         self.unsorted_dir_qn = FileQuestion(self,
-                                            question='dir',
-                                            row=(self._ORIGIN_ROW + 2),
+                                            question='Unsorted Directory:',
+                                            row=(self._ORIGIN_ROW + 3),
                                             column=self._ORIGIN_COL,
                                             textbox_width=50,
                                             col_span=2,
                                             is_dir_search=True)
         
+        return
+        
+    def _populate_config_values(self) -> None:
+        """Extracts config values and fills values.
+        
+        A function which extracts the values from the local
+        configuration file and populates the relevant window
+        objects with the values.
+
+        Args:
+            None
+
+        Returns:
+        """
+
         # creates local config file if none present
         # and reads in config values to use locally
         self.config = read_config()
 
         # creates dirs if they do not exist
-        # create_path(config['input_dir'])
-        # create_path(config['unsorted_dir'])
+        create_path(self.config['input_dir'])
+        # create_path(self.config['unsorted_dir'])
         
         # populates defaults from config values
         self.input_dir_qn.set_textbox(self.config['input_dir'])
+        self.output_dir_qn.set_textbox(self.config['output_dir'])
         self.unsorted_dir_qn.set_textbox(self.config['unsorted_dir'])
 
     def save_input_to_config(self):
@@ -93,6 +132,8 @@ class MainWindow(tk.Tk):
 
         self.config['input_dir'] = \
             self.input_dir_qn.get_textbox()
+        self.config['output_dir'] = \
+            self.output_dir_qn.get_textbox()
         self.config['unsorted_dir'] = \
             self.input_dir_qn.get_textbox()
         save_config(self.config)
