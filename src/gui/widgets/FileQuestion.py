@@ -9,6 +9,7 @@ import tkinter as tk
 from tkinter import ttk
 from tkinter import filedialog
 from .TextBoxQuestion import TextBoxQuestion
+from constants import *
 
 class FileQuestion(TextBoxQuestion):
 
@@ -24,8 +25,8 @@ class FileQuestion(TextBoxQuestion):
                  *, # requires keyword arguments
                  question : str = '',
                  status : str = '',
-                 row : int = TextBoxQuestion._ORIGIN_ROW,
-                 column : int = TextBoxQuestion._ORIGIN_COL,
+                 row : int = _ORIGIN_ROW,
+                 column : int = _ORIGIN_COL,
                  label_width : int = TextBoxQuestion._DEFAULT_LABEL_WIDTH,
                  textbox_width : int = TextBoxQuestion._DEFAULT_TEXTBOX_WIDTH \
                     - _DEFAULT_BUTTON_WIDTH,
@@ -68,8 +69,8 @@ class FileQuestion(TextBoxQuestion):
         self.is_dir_search = is_dir_search
 
         # positioning button to the right of the textbox
-        FILE_DIALOG_ROW = TextBoxQuestion._ORIGIN_ROW
-        FILE_DIALOG_COL = TextBoxQuestion._ORIGIN_COL + 2
+        FILE_DIALOG_ROW = _ORIGIN_ROW
+        FILE_DIALOG_COL = _ORIGIN_COL + 2
         self.file_exp_button = ttk.Button(self,
                                           text=self._BUTTON_TEXT,
                                           width=self.button_width,
@@ -97,11 +98,11 @@ class FileQuestion(TextBoxQuestion):
         filepath_input = self.get_textbox()
         if os.path.exists(filepath_input):
             self.status_label.config(text='Valid filepath.',
-                                     foreground=self._SUCCESS_COL)
+                                     foreground=_SUCCESS_COL)
             return True
         
         self.status_label.config(text='Filepath not found.',
-                                 foreground=self._FAIL_COL)
+                                 foreground=_FAIL_COL)
         return False
 
 
@@ -136,9 +137,9 @@ class FileQuestion(TextBoxQuestion):
         if self.filepath: # file successfully chosen
             self.set_textbox(self.filepath)
             self.status_label.config(text=f'{file_type} successfully chosen.',
-                                     foreground=TextBoxQuestion._SUCCESS_COL)
+                                     foreground=_SUCCESS_COL)
         else: # most likely premature exit
             self.status_label.config(text=f'{file_type} not chosen.',
-                                     foreground=TextBoxQuestion._FAIL_COL)
+                                     foreground=_FAIL_COL)
             
         return

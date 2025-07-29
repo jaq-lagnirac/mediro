@@ -66,26 +66,28 @@ class MainWindow(tk.Tk):
                          columnspan=100,
                          pady=50)
         
+        DIR_Q_WIDTH = 50
+        DIR_Q_COL_SPAN = 2
         self.input_dir_qn = FileQuestion(self,
                                          question='Input Directory:',
                                          row=(self._ORIGIN_ROW + 1),
                                          column=self._ORIGIN_COL,
-                                         textbox_width=50,
-                                         col_span=2,
+                                         textbox_width=DIR_Q_WIDTH,
+                                         col_span=DIR_Q_COL_SPAN,
                                          is_dir_search=True)
         self.output_dir_qn = FileQuestion(self,
                                           question='Output Directory:',
                                           row=(self._ORIGIN_ROW + 2),
                                           column=self._ORIGIN_COL,
-                                          textbox_width=50,
-                                          col_span=2,
+                                          textbox_width=DIR_Q_WIDTH,
+                                          col_span=DIR_Q_COL_SPAN,
                                           is_dir_search=True)
         self.unsorted_dir_qn = FileQuestion(self,
                                             question='Unsorted Directory:',
                                             row=(self._ORIGIN_ROW + 3),
                                             column=self._ORIGIN_COL,
-                                            textbox_width=50,
-                                            col_span=2,
+                                            textbox_width=DIR_Q_WIDTH,
+                                            col_span=DIR_Q_COL_SPAN,
                                             is_dir_search=True)
         
         return

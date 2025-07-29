@@ -6,6 +6,7 @@
 
 import tkinter as tk
 from tkinter import ttk
+from constants import *
 
 class TextBoxQuestion(ttk.Frame):
 
@@ -14,18 +15,11 @@ class TextBoxQuestion(ttk.Frame):
     combination to take user input.
     """
 
-    _ORIGIN_ROW = 0
-    _ORIGIN_COL = 0
     _DEFAULT_LABEL_WIDTH = 20
     _DEFAULT_TEXTBOX_WIDTH = 30
     _DEFAULT_COL_SPAN = 1
     _FRAME_PADX_LEFT = 10
     _FRAME_PADX_RIGHT = 10
-    _SUCCESS_COL = '#00dd00'
-    _FAIL_COL = '#ff0000'
-    _FONT_NAME = 'Verdana'
-    _FONT_SIZE = 14
-    _FONT_INFO = (_FONT_NAME, _FONT_SIZE)
 
     def __init__(self,
                  master : tk.Tk = None,
@@ -74,26 +68,26 @@ class TextBoxQuestion(ttk.Frame):
                   sticky='NW')
         
         # label asking the user a question
-        QUESTION_LABEL_ROW = self._ORIGIN_ROW
-        QUESTION_LABEL_COL = self._ORIGIN_COL
+        QUESTION_LABEL_ROW = _ORIGIN_ROW
+        QUESTION_LABEL_COL = _ORIGIN_COL
         self.question_label = ttk.Label(self,
                                         width=self.label_width,
                                         text=self.question,
                                         anchor='w',
                                         justify='left',
-                                        font=self._FONT_INFO)
+                                        font=_FONT_INFO)
         self.question_label.grid(row=QUESTION_LABEL_ROW,
                                  column=QUESTION_LABEL_COL,
                                  sticky='W')
         
         # textbox collecting the user input
-        TEXTBOX_ROW = self._ORIGIN_ROW
-        TEXTBOX_COL = self._ORIGIN_COL + 1
+        TEXTBOX_ROW = _ORIGIN_ROW
+        TEXTBOX_COL = _ORIGIN_COL + 1
         self.text_str = tk.StringVar()
         self.textbox = ttk.Entry(self,
                                  width=self.textbox_width,
                                  textvariable=self.text_str,
-                                 font=self._FONT_INFO)
+                                 font=_FONT_INFO)
         self.textbox.grid(row=TEXTBOX_ROW,
                           column=TEXTBOX_COL,
                           sticky='NESW')
@@ -103,13 +97,13 @@ class TextBoxQuestion(ttk.Frame):
         self.text_str.trace_add('write', self.validate_input)
 
         # status message updating the user on the validity of input
-        STATUS_LABEL_ROW = self._ORIGIN_ROW + 1
+        STATUS_LABEL_ROW = _ORIGIN_ROW + 1
         STATUS_LABEL_COL = TEXTBOX_COL
         self.status_label = ttk.Label(self,
                                       text=self.status,
                                       anchor='w',
                                       justify='left',
-                                      font=self._FONT_INFO)
+                                      font=_FONT_INFO)
         self.status_label.grid(row=STATUS_LABEL_ROW,
                                column=STATUS_LABEL_COL,
                                sticky='NESW')
@@ -167,6 +161,6 @@ class TextBoxQuestion(ttk.Frame):
             bool: Returns True no matter the input.
         """
         self.status_label.config(text='Valid input.',
-                                 foreground=self._SUCCESS_COL)
+                                 foreground=_SUCCESS_COL)
         return True
     

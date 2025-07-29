@@ -3,11 +3,10 @@
 # A logo widget for display on the lefthand
 # side of the main window for Mediro
 
-import os
 import tkinter as tk
 from tkinter import ttk
 from PIL import ImageTk, Image
-from paths import resource_path
+from constants import *
 
 class MainLogo(ttk.Frame):
 
@@ -16,16 +15,11 @@ class MainLogo(ttk.Frame):
     of the application.
     """
 
-    _ORIGIN_ROW = 0
-    _ORIGIN_COL = 0
-    _ARBITRARILY_LARGE_NUM = 100 # to take up entire left side
-    _LOGO_PATH = resource_path(os.path.join('.', 'images', 'logo-color.png'))
     _LOGO_MULTIPLIER = 0.2
     _FRAME_PADX_LEFT = 0
     _FRAME_PADX_RIGHT = 10
     _PADY_TOP = 200
     _PADY_BOT = 200
-    _LOGO_COLOR = '#fee869'
 
     def __init__(self,
                  master : tk.Tk = None) -> None:
@@ -44,18 +38,18 @@ class MainLogo(ttk.Frame):
         # configures to window, adds styles            
         super().__init__(master)
         logo_style = ttk.Style()
-        logo_style.configure('Logo.TFrame', background=self._LOGO_COLOR)
-        logo_style.configure('Logo.TLabel', background=self._LOGO_COLOR)
+        logo_style.configure('Logo.TFrame', background=_LOGO_COLOR)
+        logo_style.configure('Logo.TLabel', background=_LOGO_COLOR)
 
         # positions tk.Frame in window
         self.config(style='Logo.TFrame')
-        self.grid(row=self._ORIGIN_ROW,
-                  column=self._ORIGIN_COL,
-                  rowspan=self._ARBITRARILY_LARGE_NUM,
+        self.grid(row=_ORIGIN_ROW,
+                  column=_ORIGIN_COL,
+                  rowspan=_ARBITRARILY_LARGE_NUM,
                   padx=(self._FRAME_PADX_LEFT, self._FRAME_PADX_RIGHT))
         
         # NOTE: no "self" due to garbage collector avoidance
-        image = Image.open(self._LOGO_PATH) # opens image
+        image = Image.open(_LOGO_PATH) # opens image
         resized_dims = [int(self._LOGO_MULTIPLIER * length) \
                         for length in image.size]
         image = image.resize(size=resized_dims)
