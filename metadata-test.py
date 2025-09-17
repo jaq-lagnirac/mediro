@@ -45,7 +45,13 @@ creation_time = video_probe \
     .get('tags') \
     .get('creation_time')
 print(creation_time)
+creation_obj = time.strptime(creation_time, '%Y-%m-%dT%H:%M:%S.%fZ')
+print(creation_obj)
 
+year = str(creation_obj.tm_year)
+month = str(creation_obj.tm_mon).zfill(2)
+day = str(creation_obj.tm_mday)
+print(f'{year}_{month}_{day}\n\n')
 from time import sleep
 print('this is a test.')
 sleep(1000)
