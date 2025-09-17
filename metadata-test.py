@@ -5,6 +5,7 @@
 import os
 import sys
 import time
+from datetime import datetime, timezone
 import exifread # only works with images
 
 
@@ -20,19 +21,20 @@ file_path = '20250214_183649.jpg'
 with open(file_path, 'rb') as handle:
     tags = exifread.process_file(handle)
 
-    # for key, value in tags.items():
-    #     print(f'{key:<30}{value}')
+    for key, value in tags.items():
+        print(f'{key:<30}{value}')
 
     # search_value = 'Image DateTime'
+    # leaves it in local time
     search_value = 'EXIF DateTimeOriginal'
     if search_value in tags:
         date_taken_str = str(tags[search_value])
-        date_taken_obj = time.strptime(date_taken_str, '%Y:%m:%d %H:%M:%S')
+        date_taken_obj = datetime.strptime(date_taken_str, '%Y:%m:%d %H:%M:%S')
         print(f'\n\n{date_taken_str}\n{date_taken_obj}')
         
-        year = str(date_taken_obj.tm_year)
-        month = str(date_taken_obj.tm_mon).zfill(2)
-        day = str(date_taken_obj.tm_mday)
+        year = str(date_taken_obj.year).zfill(2)
+        month = str(date_taken_obj.month).zfill(2)
+        day = str(date_taken_obj.day).zfill(2)
         print(f'{year}_{month}_{day}\n\n')
 
 import ffmpeg # videos, for windows --> https://www.gyan.dev/ffmpeg/builds/
@@ -45,12 +47,15 @@ creation_time = video_probe \
     .get('tags') \
     .get('creation_time')
 print(creation_time)
-creation_obj = time.strptime(creation_time, '%Y-%m-%dT%H:%M:%S.%fZ')
+creation_obj = datetime.strptime(creation_time, '%Y-%m-%dT%H:%M:%S.%fZ') # Z for Zulu time (UTC)
+creation_obj = creation_obj.replace(tzinfo=timezone.utc) # assigns UTC to input
+print(creation_obj)
+creation_obj = creation_obj.astimezone() # localizes timezone to system time
 print(creation_obj)
 
-year = str(creation_obj.tm_year)
-month = str(creation_obj.tm_mon).zfill(2)
-day = str(creation_obj.tm_mday)
+year = str(creation_obj.year).zfill(2)
+month = str(creation_obj.month).zfill(2)
+day = str(creation_obj.day).zfill(2)
 print(f'{year}_{month}_{day}\n\n')
 from time import sleep
 print('this is a test.')
