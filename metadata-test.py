@@ -20,8 +20,8 @@ file_path = '20250214_183649.jpg'
 with open(file_path, 'rb') as handle:
     tags = exifread.process_file(handle)
 
-    for key, value in tags.items():
-        print(f'{key:<30}{value}')
+    # for key, value in tags.items():
+    #     print(f'{key:<30}{value}')
 
     # search_value = 'Image DateTime'
     search_value = 'EXIF DateTimeOriginal'
