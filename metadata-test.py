@@ -5,7 +5,9 @@
 import os
 import sys
 import time
-import exifread
+import exifread # only works with images
+
+
 # try:
 #     base_path = sys._MEIPASS # only found in PyInstaller
 # except AttributeError:
@@ -31,8 +33,18 @@ with open(file_path, 'rb') as handle:
         year = str(date_taken_obj.tm_year)
         month = str(date_taken_obj.tm_mon).zfill(2)
         day = str(date_taken_obj.tm_mday)
-        print(f'{year}_{month}_{day}')
+        print(f'{year}_{month}_{day}\n\n')
 
+import ffmpeg # videos, for windows --> https://www.gyan.dev/ffmpeg/builds/
+from pprint import pp
+video_path = '20250829_155438.mp4'
+video_probe = ffmpeg.probe(video_path)
+# pp(video_probe)
+creation_time = video_probe \
+    .get('format', {}) \
+    .get('tags') \
+    .get('creation_time')
+print(creation_time)
 
 from time import sleep
 print('this is a test.')
