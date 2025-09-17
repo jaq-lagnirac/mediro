@@ -3,8 +3,9 @@ MEDIRO_requires_sorting/
 MEDIRO_unsorted/
 20*/
 
-# virtual environment
+# virtual environments
 .venv
+win-venv
 
 # imports ignores
 __pycache__/
