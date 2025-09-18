@@ -10,7 +10,6 @@ from datetime import datetime, timezone
 import exifread # for parsing images
 import ffmpeg # for parsing videos
 from paths import create_path
-from constants import _EXIFREAD_STOP_TAG, _EXIFREAD_SEARCH_VAL
 
 def _read_photo_metadata(filename : str) -> datetime:
     """Handles attempts to read photo metadata using ExifRead.
@@ -92,7 +91,32 @@ def _extract_datetime_metadata(filename : str):
 
     return datetime_obj
 
-def mediro_sort(input_dir_path : str) -> None:
+def _datetime_to_relpath(datetime_obj : datetime) -> str:
+    """Generates a directory path string from a datetime object.
+
+    Args:
+        datetime_obj (str): A datetime object containing at least
+            year, month, and day information.
+    
+    Returns:
+        str: Returns a filepath of nested directories.
+    """
+
+    DIR_FORMAT = {
+        'year' : '%Y',
+        'month' : '%Y_%m',
+        'day' : '%Y_%m_%d'
+    }
+    year_dir = datetime_obj.strftime(DIR_FORMAT['year'])
+    month_dir = datetime_obj.strftime(DIR_FORMAT['month'])
+    day_dir = datetime_obj.strftime(DIR_FORMAT['day'])
+    
+    directory_path = os.path.join(year_dir, month_dir, day_dir)
+    return directory_path
+
+def mediro_sort(input_dir : str,
+                output_dir : str,
+                unsorted_dir : str) -> None:
     """Performs main MEDIRO tasks.
 
     A function which takes an input directory path, reads
@@ -100,11 +124,39 @@ def mediro_sort(input_dir_path : str) -> None:
     a file tree based on the date created.
 
     Args:
-        input_dir_path (str): The relative path to the input
+        input_dir (str): The relative path to the input
             directory of media to be sorted.
+        output_dir (str): The relative path to the output
+            directory, where the generated folders will go.
+        unsorted_dir (str): The relative path to the unosrted
+            directory, where media that cannot be sorted by
+            Mediro will go.
     
     Returns:
         None
     """
 
+    for filename in os.listdir(input_dir):
+        
+        full_input_path = os.path.join(input_dir, filename)
+        if os.path.isdir(full_input_path):
+            continue
+
+        # attempts to extract datetime object from metadata
+        datetime_metadata = _extract_datetime_metadata(full_input_path)
+
+        full_target_path = unsorted_dir # default, scope resolution
+        if datetime_metadata:
+            target_date_dir = _datetime_to_relpath(datetime_metadata)
+            full_target_path = os.path.join(output_dir, target_date_dir)
+        create_path(full_target_path)
+
+        print(filename, full_target_path)
+
 __all__ = ['mediro_sort']
+
+if __name__ == "__main__":
+    test_dir = os.path.join('..', 'test')
+    output_dir = os.path.join(test_dir, 'output')
+    unsorted_dir = os.path.join(test_dir, 'unsorted')
+    mediro_sort(test_dir, output_dir, unsorted_dir)
