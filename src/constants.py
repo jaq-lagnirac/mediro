@@ -17,6 +17,15 @@ _FONT_SIZE = 14
 _FONT_INFO = (_FONT_NAME, _FONT_SIZE)
 _LOGO_COLOR = '#fee869'
 _LOGO_PATH = resource_path(os.path.join('.', 'images', 'logo-color.png'))
+_SUPPORTED_PHOTO_EXTS = [
+    '.jpg',
+    '.jpeg',
+    '.png',
+    '.jxl',
+    '.webp',
+    '.heic',
+    '.raw',
+    ]
 
 __all__ = [
     '_ARBITRARILY_LARGE_NUM',
@@ -29,4 +38,5 @@ __all__ = [
     '_FONT_INFO',
     '_LOGO_COLOR',
     '_LOGO_PATH',
+    '_SUPPORTED_PHOTO_EXTS',
     ]
