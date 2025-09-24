@@ -140,21 +140,32 @@ def mediro_sort(input_dir : str,
         
         full_input_path = os.path.join(input_dir, filename)
         if os.path.isdir(full_input_path):
-            continue
+            continue # skips past directories in input_dir
 
         # attempts to extract datetime object from metadata
         datetime_metadata = _extract_datetime_metadata(full_input_path)
 
-        full_target_path = unsorted_dir # default, scope resolution
+        # if metadata found, generates output pathway
+        # otherwise defaults path to unsorted directory
+        target_dir_path = unsorted_dir # default, scope resolution
         if datetime_metadata:
             target_date_dir = _datetime_to_relpath(datetime_metadata)
-            full_target_path = os.path.join(output_dir, target_date_dir)
-        create_path(full_target_path)
+            target_dir_path = os.path.join(output_dir, target_date_dir)
+        create_path(target_dir_path)
 
-        print(filename, full_target_path)
+        full_target_path = os.path.join(target_dir_path, filename)
+        print(full_input_path, full_target_path)
+        if not os.path.exists(full_target_path):
+            # does not touch file if duplicate found in target location
+            # 
+            # TODO: 2025-09-24 - Possible future direction:
+            # implement different handling for duplicate files, allow
+            # user to determine changes
+            os.replace(full_input_path, full_target_path)
 
 __all__ = ['mediro_sort']
 
+# test code, remove before production
 if __name__ == "__main__":
     test_dir = os.path.join('..', 'test')
     output_dir = os.path.join(test_dir, 'output')
