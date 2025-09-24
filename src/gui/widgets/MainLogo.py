@@ -63,3 +63,5 @@ class MainLogo(ttk.Frame):
         self.logo.grid(pady=(self._PADY_TOP, self._PADY_BOT))
 
         return
+    
+__all__ = ['MainLogo']

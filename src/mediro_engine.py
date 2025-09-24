@@ -154,7 +154,6 @@ def mediro_sort(input_dir : str,
         create_path(target_dir_path)
 
         full_target_path = os.path.join(target_dir_path, filename)
-        print(full_input_path, full_target_path)
         if not os.path.exists(full_target_path):
             # does not touch file if duplicate found in target location
             # 

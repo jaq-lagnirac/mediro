@@ -32,7 +32,8 @@ class FileQuestion(TextBoxQuestion):
                     - _DEFAULT_BUTTON_WIDTH,
                  col_span : int = TextBoxQuestion._DEFAULT_COL_SPAN,
                  button_width : int = _DEFAULT_BUTTON_WIDTH,
-                 is_dir_search : bool = False) -> None:
+                 is_dir_search : bool = False,
+                 require_existence : bool = True) -> None:
         """Initializes the frame to take user input for a directory.
         
         A function which handles the labeling and creation
@@ -52,6 +53,9 @@ class FileQuestion(TextBoxQuestion):
                 a file dialog.
             is_dir_search (bool): If True, will pull up dialog for directory
                 search. Otherwise, will search for filename.
+            require_existence (bool): If True, will perform input validation
+                on the existence of the provided file path. Otherwise, will
+                accept any file path.
 
         Returns:
             None
@@ -67,6 +71,7 @@ class FileQuestion(TextBoxQuestion):
                          col_span=col_span)
         self.button_width = button_width + 1 # extra 1 centers a bit better
         self.is_dir_search = is_dir_search
+        self.require_existence = require_existence
 
         # positioning button to the right of the textbox
         FILE_DIALOG_ROW = _ORIGIN_ROW
@@ -96,7 +101,7 @@ class FileQuestion(TextBoxQuestion):
         """
 
         filepath_input = self.get_textbox()
-        if os.path.exists(filepath_input):
+        if os.path.exists(filepath_input) or (not self.require_existence):
             self.status_label.config(text='Valid filepath.',
                                      foreground=_SUCCESS_COL)
             return True
@@ -143,3 +148,5 @@ class FileQuestion(TextBoxQuestion):
                                      foreground=_FAIL_COL)
             
         return
+
+__all__ = ['FileQuestion']

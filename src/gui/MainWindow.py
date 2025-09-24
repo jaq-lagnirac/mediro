@@ -9,6 +9,8 @@ from tkinter import ttk
 from .widgets import *
 from config_handling import read_config, save_config
 from paths import create_path
+from constants import *
+from mediro_engine import mediro_sort
 
 
 class MainWindow(tk.Tk):
@@ -17,11 +19,12 @@ class MainWindow(tk.Tk):
     Generates the main window which the user will interact with.
     """
 
-    _ORIGIN_ROW = 0
-    _ORIGIN_COL = 1 # MainLogo at (0, 0), shift subsequent objects to column 1
-    _FONT_NAME = 'Verdana'
-    _FONT_SIZE = 10
-    _FONT_INFO = (_FONT_NAME, _FONT_SIZE)
+    # MainLogo at (0, 0), shift subsequent objects to column 1
+    _ORIGIN_ROW = _ORIGIN_ROW
+    _ORIGIN_COL = _ORIGIN_COL + 1
+    # _FONT_NAME = 'Verdana'
+    # _FONT_SIZE = 10
+    # _FONT_INFO = (_FONT_NAME, _FONT_SIZE)
 
     def __init__(self) -> None:
         """Class constructor method.
@@ -81,15 +84,33 @@ class MainWindow(tk.Tk):
                                           column=self._ORIGIN_COL,
                                           textbox_width=DIR_Q_WIDTH,
                                           col_span=DIR_Q_COL_SPAN,
-                                          is_dir_search=True)
+                                          is_dir_search=True,
+                                          require_existence=False)
         self.unsorted_dir_qn = FileQuestion(self,
                                             question='Unsorted Directory:',
                                             row=(self._ORIGIN_ROW + 3),
                                             column=self._ORIGIN_COL,
                                             textbox_width=DIR_Q_WIDTH,
                                             col_span=DIR_Q_COL_SPAN,
-                                            is_dir_search=True)
+                                            is_dir_search=True,
+                                            require_existence=False)
         
+        stylesheet = ttk.Style()
+        stylesheet.configure('Main.TButton', font=_FONT_INFO)
+        BOT_ORIGIN_ROW = self._ORIGIN_ROW + 10
+        BOT_BUTTON_COL = self._ORIGIN_COL + DIR_Q_COL_SPAN - 1
+        
+        self.start_button = ttk.Button(self,
+                                       text='Start',
+                                       command=self.start_mediro_sort,
+                                       width=10,
+                                       style='Main.TButton')
+        self.start_button.grid(sticky='NES',
+                               row=BOT_ORIGIN_ROW,
+                               column=BOT_BUTTON_COL,
+                               padx=(0, 10))
+
+
         return
         
     def _populate_config_values(self) -> None:
@@ -141,3 +162,21 @@ class MainWindow(tk.Tk):
         save_config(self.config)
 
         return
+    
+    def start_mediro_sort(self) -> None:
+        """Streamlines the mediro_sort call.
+        
+        Args:
+            None
+        
+        Returns:
+            None
+        """
+
+        input_dir = self.input_dir_qn.get_textbox()
+        output_dir = self.output_dir_qn.get_textbox()
+        unsorted_dir = self.unsorted_dir_qn.get_textbox()
+        mediro_sort(input_dir, output_dir, unsorted_dir)
+        return
+    
+__all__ = ['MainWindow']
