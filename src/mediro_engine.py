@@ -73,8 +73,15 @@ def _read_video_metadata(filename : str) -> datetime:
     localized_date = zulu_time_date.astimezone()
     return localized_date
 
-def _extract_datetime_metadata(filename : str):
+def _extract_datetime_metadata(filename : str) -> datetime:
     """Handles reading metadata for a given file.
+
+    Args:
+        filename (str): Filepath to attempt extraction on.
+    
+    Returns:
+        datetime: Returns a datetime object if successful,
+            None otherwise.
     """
 
     # attempts to read photo metadata using exifread
@@ -147,7 +154,7 @@ def mediro_sort(input_dir : str,
 
         # if metadata found, generates output pathway
         # otherwise defaults path to unsorted directory
-        target_dir_path = unsorted_dir # default, scope resolution
+        target_dir_path = unsorted_dir # default value, scope resolution
         if datetime_metadata:
             target_date_dir = _datetime_to_relpath(datetime_metadata)
             target_dir_path = os.path.join(output_dir, target_date_dir)
