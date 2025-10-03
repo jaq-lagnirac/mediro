@@ -7,6 +7,7 @@
 import os
 import sys
 import json
+import logging
 from paths import resource_path
 
 _CONFIG_NAME = '.MEDIRO.config.json'
@@ -25,12 +26,13 @@ def _create_default_config() -> None:
     
     Args:
         None
-    
+
     Returns:
         None
     """
     
     if os.path.exists(_CONFIG_NAME):
+        logging.info('Mediro configuration file found.')
         return
     
     default_values = None # scope resolution
@@ -50,6 +52,8 @@ def _create_default_config() -> None:
     if sys.platform == 'win32':
         os.system(f'attrib +h "{_CONFIG_NAME}"')
     
+    logging.info('No Mediro configuration file created. ' \
+                 'Creating default configuration file.')
     return
 
 def read_config() -> dict:
@@ -67,6 +71,7 @@ def read_config() -> dict:
     """
 
     _create_default_config()
+
     config_values = None # scope resolution
     with open(_CONFIG_NAME, 'r') as input_file:
         config_values = json.load(input_file)
