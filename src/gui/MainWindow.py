@@ -11,7 +11,7 @@ from config_handling import read_config, save_config
 from paths import create_path
 from constants import *
 from mediro_engine import mediro_sort
-
+from logging import info
 
 class MainWindow(tk.Tk):
 
@@ -39,13 +39,13 @@ class MainWindow(tk.Tk):
         Returns:
             None
         """
-
         # initializes main window object
         super().__init__()
         self.resizable(False, False)
         self.title('Mediro')
         self._populate_window()
         self._populate_config_values()
+        info('Window booted up, ready to run.')
 
     def _populate_window(self) -> None:
         """Creates objects in main window.
