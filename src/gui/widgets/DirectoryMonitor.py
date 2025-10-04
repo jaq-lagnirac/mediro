@@ -139,7 +139,7 @@ class DirectoryMonitor(ttk.Frame):
             self.thread_hash[self.target_dir] = threading.Event()
         
         # clears all events, making all threads inactive
-        for path, _ in self.thread_hash.items():
+        for path in self.thread_hash.keys():
             self.thread_hash[path].clear()
         
         # enables start flag for specific thread
