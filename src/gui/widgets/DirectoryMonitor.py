@@ -52,7 +52,7 @@ class DirectoryMonitor(ttk.Frame):
     def __init__(self,
                  master : tk.Tk = None,
                  *, # requires keyword arguments
-                 event_handler : DirEventHandler = None,
+                #  event_handler : DirEventHandler = None,
                  target_directory : str = '.',
                  row : int = _ORIGIN_ROW,
                  column : int = (_ORIGIN_COL + 1),
@@ -74,7 +74,8 @@ class DirectoryMonitor(ttk.Frame):
         """
 
         super().__init__(master)
-        self.event_handler = event_handler
+        # self.event_handler = event_handler
+        self.event_handler = DirEventHandler(self)
         self.target_dir = target_directory
         self.col = column
         self.row = row

@@ -96,12 +96,12 @@ class MainWindow(tk.Tk):
                                             require_existence=False)
         
         # self.event_handler = DirEventHandler(self)
-        # self.monitor = DirectoryMonitor(self,
-        #                                 event_handler=self.event_handler,
-        #                                 row=(self._ORIGIN_ROW + 4),
-        #                                 column=self._ORIGIN_COL,
-        #                                 output_width=DIR_Q_WIDTH,
-        #                                 col_span=DIR_Q_COL_SPAN)
+        self.monitor = DirectoryMonitor(self,
+                                        # event_handler=self.event_handler,
+                                        row=(self._ORIGIN_ROW + 4),
+                                        column=self._ORIGIN_COL,
+                                        output_width=DIR_Q_WIDTH,
+                                        col_span=DIR_Q_COL_SPAN)
         
         stylesheet = ttk.Style()
         stylesheet.configure('Main.TButton', font=_FONT_INFO)
@@ -131,6 +131,7 @@ class MainWindow(tk.Tk):
             None
 
         Returns:
+            None
         """
 
         # creates local config file if none present
