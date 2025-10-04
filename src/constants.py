@@ -16,6 +16,7 @@ _FONT_NAME = 'Verdana'
 _FONT_SIZE = 14
 _FONT_INFO = (_FONT_NAME, _FONT_SIZE)
 _LOGO_COLOR = '#fee869'
+_LOG_FILE = '.mediro.log'
 _LOGO_PATH = resource_path(os.path.join('.', 'images', 'logo-color.png'))
 _SUPPORTED_PHOTO_EXTS = [
     '.jpg',
@@ -37,6 +38,7 @@ __all__ = [
     '_FONT_SIZE',
     '_FONT_INFO',
     '_LOGO_COLOR',
+    '_LOG_FILE',
     '_LOGO_PATH',
     '_SUPPORTED_PHOTO_EXTS',
     ]

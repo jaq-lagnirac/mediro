@@ -5,7 +5,6 @@
 # and sort through the media.
 
 import os
-import sys
 from datetime import datetime, timezone
 import exifread # for parsing images
 import ffmpeg # for parsing videos

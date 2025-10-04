@@ -12,7 +12,6 @@ from paths import create_path
 from constants import *
 from mediro_engine import mediro_sort
 
-
 class MainWindow(tk.Tk):
 
     """
@@ -39,13 +38,13 @@ class MainWindow(tk.Tk):
         Returns:
             None
         """
-
         # initializes main window object
         super().__init__()
         self.resizable(False, False)
         self.title('Mediro')
         self._populate_window()
         self._populate_config_values()
+        self.output_box.update_output('Window booted up, ready to run.')
 
     def _populate_window(self) -> None:
         """Creates objects in main window.
@@ -95,6 +94,11 @@ class MainWindow(tk.Tk):
                                             is_dir_search=True,
                                             require_existence=False)
         
+        self.output_box = LoggingBox(self,
+                                     row=(self._ORIGIN_ROW + 4),
+                                     column=self._ORIGIN_COL,
+                                     col_span=DIR_Q_COL_SPAN)
+
         stylesheet = ttk.Style()
         stylesheet.configure('Main.TButton', font=_FONT_INFO)
         BOT_ORIGIN_ROW = self._ORIGIN_ROW + 10
@@ -128,7 +132,7 @@ class MainWindow(tk.Tk):
 
         # creates local config file if none present
         # and reads in config values to use locally
-        self.config = read_config()
+        self.config = read_config(self.output_box.update_output)
 
         # creates dirs if they do not exist
         create_path(self.config['input_dir'])
@@ -138,6 +142,7 @@ class MainWindow(tk.Tk):
         self.input_dir_qn.set_textbox(self.config['input_dir'])
         self.output_dir_qn.set_textbox(self.config['output_dir'])
         self.unsorted_dir_qn.set_textbox(self.config['unsorted_dir'])
+        return
 
     def save_input_to_config(self):
         """Updates config file with user input.
@@ -159,7 +164,7 @@ class MainWindow(tk.Tk):
             self.output_dir_qn.get_textbox()
         self.config['unsorted_dir'] = \
             self.input_dir_qn.get_textbox()
-        save_config(self.config)
+        save_config(self.config, self.output_box.update_output)
 
         return
     
