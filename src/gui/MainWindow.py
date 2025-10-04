@@ -132,7 +132,7 @@ class MainWindow(tk.Tk):
 
         # creates local config file if none present
         # and reads in config values to use locally
-        self.config = read_config()
+        self.config = read_config(self.output_box.update_output)
 
         # creates dirs if they do not exist
         create_path(self.config['input_dir'])
@@ -142,7 +142,6 @@ class MainWindow(tk.Tk):
         self.input_dir_qn.set_textbox(self.config['input_dir'])
         self.output_dir_qn.set_textbox(self.config['output_dir'])
         self.unsorted_dir_qn.set_textbox(self.config['unsorted_dir'])
-        self.output_box.update_output()
         return
 
     def save_input_to_config(self):
@@ -165,7 +164,7 @@ class MainWindow(tk.Tk):
             self.output_dir_qn.get_textbox()
         self.config['unsorted_dir'] = \
             self.input_dir_qn.get_textbox()
-        save_config(self.config, self.output_box)
+        save_config(self.config, self.output_box.update_output)
 
         return
     

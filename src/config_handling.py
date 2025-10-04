@@ -8,13 +8,14 @@ import os
 import sys
 import json
 import logging
+from typing import Callable
 from paths import resource_path
 
 _CONFIG_NAME = '.MEDIRO.config.json'
 _DEFAULT_CONFIG_NAME = resource_path('default.config.json')
 _INDENT = 2
 
-def _create_default_config() -> None:
+def _create_default_config(stream : Callable[[str], None]) -> None:
     """Creates new config.json if none are detected.
     
     A function which looks for a configuration JSON file
@@ -25,14 +26,14 @@ def _create_default_config() -> None:
     is a proper and valid target for config file handling.
     
     Args:
-        None
+        stream (Callable[[str], None]): The output stream for the messages.
 
     Returns:
         None
     """
     
     if os.path.exists(_CONFIG_NAME):
-        logging.info('Mediro configuration file found.')
+        stream('Mediro configuration file found.')
         return
     
     default_values = None # scope resolution
@@ -52,11 +53,11 @@ def _create_default_config() -> None:
     if sys.platform == 'win32':
         os.system(f'attrib +h "{_CONFIG_NAME}"')
     
-    logging.info('No Mediro configuration file created. ' \
-                 'Creating default configuration file.')
+    stream('No Mediro configuration file created. ' \
+           'Creating default configuration file.')
     return
 
-def read_config() -> dict:
+def read_config(stream : Callable[[str], None] = print) -> dict:
     """Reads in values from JSON file.
     
     A function which reads in the configuration values from a
@@ -64,20 +65,21 @@ def read_config() -> dict:
     into a local dictionary.
     
     Args:
-        None
+        stream (Callable[[str], None]): The output stream for the messages.
     
     Returns:
         dict: Returns a dictionary of configuration values.
     """
 
-    _create_default_config()
+    _create_default_config(stream)
 
     config_values = None # scope resolution
     with open(_CONFIG_NAME, 'r') as input_file:
         config_values = json.load(input_file)
     return config_values
 
-def save_config(input_values : dict) -> None:
+def save_config(input_values : dict,
+                stream : Callable[[str], None] = print) -> None:
     """Takes new values and saves to configuration file.
     
     A function which takes user inputted values and
@@ -91,7 +93,7 @@ def save_config(input_values : dict) -> None:
         None
     """
 
-    _create_default_config()
+    _create_default_config(stream)
     with open(_CONFIG_NAME, 'w') as output_file:
         json.dump(input_values, output_file, indent=_INDENT)
     return
