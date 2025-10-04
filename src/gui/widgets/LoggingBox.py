@@ -17,7 +17,7 @@ class LoggingBox(ttk.Frame):
     Sets up and facilitates output to the user.
     """
 
-    _DEFAULT_OUTPUT_WIDTH = 80
+    _DEFAULT_OUTPUT_WIDTH = 50
     _DEFAULT_COL_SPAN = 1
     _FRAME_PADX_LEFT = 10
     _FRAME_PADX_RIGHT = 10
