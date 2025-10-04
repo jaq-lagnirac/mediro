@@ -6,8 +6,8 @@
 # https://stackoverflow.com/a/41684432
 
 import os
-import sys
 import time
+import threading
 import tkinter as tk
 from tkinter import ttk
 from queue import Queue
@@ -43,6 +43,8 @@ class DirectoryMonitor(ttk.Frame):
     A class to display the contents of a target directory.
     """
 
+    NO_FILES_FOUND = {'No files found.' : ''}
+    NOT_DIR = {'Not a directory.' : ''}
     _DEFAULT_OUTPUT_WIDTH = 50
     _DEFAULT_COL_SPAN = 1
     _FRAME_PADX_LEFT = 10
@@ -52,7 +54,6 @@ class DirectoryMonitor(ttk.Frame):
     def __init__(self,
                  master : tk.Tk = None,
                  *, # requires keyword arguments
-                #  event_handler : DirEventHandler = None,
                  target_directory : str = '.',
                  row : int = _ORIGIN_ROW,
                  column : int = (_ORIGIN_COL + 1),
@@ -62,7 +63,6 @@ class DirectoryMonitor(ttk.Frame):
 
         Args:
             master (tk.Tk): The root object of the textbox.
-            event_handler (DirEventHandler): Reference to watchdog monitor.
             target_directory (str): The directory to watch.
             row (int): The placement row of the created object.
             column (int): The placement column of the created object.
@@ -74,17 +74,15 @@ class DirectoryMonitor(ttk.Frame):
         """
 
         super().__init__(master)
-        # self.event_handler = event_handler
         self.event_handler = DirEventHandler(self)
         self.target_dir = target_directory
         self.col = column
         self.row = row
         self.output_width = output_width
         self.col_span = col_span
+        self.thread_hash = {}
 
         self.queue = Queue()
-        self.observer = None # scope resolution
-        self.update_target_dir(self.target_dir)
 
         # positions tk.Frame in window
         self.grid(row=self.row,
@@ -122,23 +120,56 @@ class DirectoryMonitor(ttk.Frame):
         Returns:
             None
         """
+
+        # adds new path if not in thread hash
         self.target_dir = target_directory
-        self.cleanup_observer()
-        self.observer = Observer()
-        self.observer.schedule(self.event_handler,
-                               target_directory,
-                               recursive=True)
-        self.observer.start()
+        if self.target_dir not in self.thread_hash:
+            self.thread_hash[self.target_dir] = threading.Event()
+        
+        # clears all events, making all threads inactive
+        for path, _ in self.thread_hash.items():
+            self.thread_hash[path].clear()
+        
+        # enables start flag for specific thread
+        self.thread_hash[self.target_dir].set()
+
+        watchdog_thread = threading.Thread(target=self.start_watchdog_thread,
+                                           args=(target_directory,))
+        watchdog_thread.daemon = True # enables daemon thread (exits with main)
+        watchdog_thread.start()
+        self.notify()
         return
 
-    def get_dir_info(self) -> str:
+    def start_watchdog_thread(self, target_directory : str) -> None:
+        """Starts up a new thread for watchdog to monitor a new directory.
+        
+        Args:
+            target_directory (str): The directory to be monitored.
+        
+        Returns:
+            None
+        """
+        observer = Observer()
+        observer.schedule(self.event_handler,
+                               target_directory,
+                               recursive=False)
+        observer.start()
+        try:
+            while self.thread_hash[target_directory].is_set():
+                time.sleep(0.1) # keeps thread alive
+        finally:
+            observer.stop()
+            observer.join()
+
+
+    def get_dir_info(self) -> dict:
         """Gathers and formats the file makeup of the target directory.
         
         Args:
             None
         
         Returns:
-            str: Returns formatted text of target directory.
+            dict: Returns a hash table of filetypes and counts
         """
 
         # counts file types in target directory
@@ -150,34 +181,52 @@ class DirectoryMonitor(ttk.Frame):
             if ext not in extension_hash:
                 extension_hash[ext] = 0
             extension_hash[ext] += 1
+
+        # if extension_hash is empty, notify user
+        if not extension_hash:
+            return self.NO_FILES_FOUND
+
+        return extension_hash
+    
+    def format_file_info(self, extension_hash : dict) -> str:
+        """Formats the a dict of filetype info into
+        a printable string.
         
-        # formats text output
+        Args:
+            file_info (dict): A hash table of filetypes and counts.
+        
+        Returns:
+            str: Returns formatted text of target directory.
+        """
+
+        # heading
         EXT_SPACING_WIDTH = 15
         COUNT_SPACING_WIDTH = 10
         file_info = f'{"File Types":<{EXT_SPACING_WIDTH}}' \
             f'{"Count":<{COUNT_SPACING_WIDTH}}\n' + \
             '-' * (EXT_SPACING_WIDTH + COUNT_SPACING_WIDTH) + '\n'
+        
+        # body
         for ext, count in extension_hash.items():
             file_info += f'{ext:<{EXT_SPACING_WIDTH}}{count}\n'
+        
         return file_info
         
-    def cleanup_observer(self) -> None:
-        """Shuts down observer when GUI destroyed or retargeting
-        to new directory.
+    def set_textbox(self, text : str) -> None:
+        """Sets the textbox output shown to the user.
         
         Args:
-            None
-        
+            text (str): The text to be shown.
+            
         Returns:
             None
         """
-
-        if self.observer:
-            self.observer.stop()
-            self.observer.join()
-        return
+        self.output_text.config(state='normal')
+        self.output_text.delete(1.0, tk.END)
+        self.output_text.insert('end', text)
+        self.output_text.config(state='disabled')
     
-    def handle_watchdog_event(self, event : tk.Event) -> None:
+    def handle_watchdog_event(self, *event : tk.Event) -> None:
         """Handles watchdog event through tkinter.
         
         Updates the output textbox with information.
@@ -189,12 +238,11 @@ class DirectoryMonitor(ttk.Frame):
             None
         """
         watchdog_event = self.queue.get()
-        self.file_info = self.get_dir_info()
-        self.output_text.config(state='normal')
-        self.output_text.delete(1.0, tk.END)
-        self.output_text.insert('end', self.file_info)
+        file_info = self.get_dir_info()
+        formatted_info = self.format_file_info(file_info)
+        self.set_textbox(formatted_info)
 
-    def notify(self, event : FileSystemEvent) -> None:
+    def notify(self, *event : FileSystemEvent) -> None:
         """Detects a watchdog event and passes it on to tkinter.
         
         Args:

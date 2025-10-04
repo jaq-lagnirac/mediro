@@ -4,6 +4,7 @@
 # Formats main window that is displayed to the user,
 # handles GUI window functionalities
 
+import os
 import tkinter as tk
 from tkinter import ttk
 from .widgets import *
@@ -95,13 +96,13 @@ class MainWindow(tk.Tk):
                                             is_dir_search=True,
                                             require_existence=False)
         
-        # self.event_handler = DirEventHandler(self)
         self.monitor = DirectoryMonitor(self,
-                                        # event_handler=self.event_handler,
                                         row=(self._ORIGIN_ROW + 4),
                                         column=self._ORIGIN_COL,
                                         output_width=DIR_Q_WIDTH,
                                         col_span=DIR_Q_COL_SPAN)
+
+        self.input_dir_qn.text_str.trace_add('write', self.update_monitor)
         
         stylesheet = ttk.Style()
         stylesheet.configure('Main.TButton', font=_FONT_INFO)
@@ -146,8 +147,32 @@ class MainWindow(tk.Tk):
         self.input_dir_qn.set_textbox(self.config['input_dir'])
         self.output_dir_qn.set_textbox(self.config['output_dir'])
         self.unsorted_dir_qn.set_textbox(self.config['unsorted_dir'])
+
+        self.monitor.update_target_dir(self.config['input_dir'])
+        return
+    
+    def update_monitor(self, *entry : tk.Event) -> None:
+        """Updates the directory monitor with
+        a new target directory.
         
-        # self.monitor.update_target_dir(self.config['input_dir'])
+        Args:
+            entry (tk.Event): The user-inputted entry, not interacted with.
+        
+        Returns:
+            None
+        """
+
+        new_dir = self.input_dir_qn.get_textbox()
+        
+        # checks to make sure input is existing directory,
+        # exits early if input does not exist
+        if not os.path.isdir(new_dir):
+            not_a_directory = \
+                self.monitor.format_file_info(self.monitor.NOT_DIR)
+            self.monitor.set_textbox(not_a_directory)
+            return
+        
+        self.monitor.update_target_dir(new_dir)
         return
 
     def save_input_to_config(self):
