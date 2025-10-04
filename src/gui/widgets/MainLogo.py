@@ -18,8 +18,9 @@ class MainLogo(ttk.Frame):
     _LOGO_MULTIPLIER = 0.2
     _FRAME_PADX_LEFT = 0
     _FRAME_PADX_RIGHT = 10
-    _PADY_TOP = 200
-    _PADY_BOT = 200
+    _PADY_BASE_VALUE = 250
+    _PADY_TOP = _PADY_BASE_VALUE
+    _PADY_BOT = _PADY_BASE_VALUE
 
     def __init__(self,
                  master : tk.Tk = None) -> None:

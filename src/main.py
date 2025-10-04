@@ -13,7 +13,7 @@ def main() -> None:
 
     # configures and starts up logging function
     WELCOME_TEXT = 'Welcome to Mediro!'
-    WELCOME_TEXT += '\n' + ('-' * len(WELCOME_TEXT)) + '\n'
+    WELCOME_TEXT += '\n' + ('-' * len(WELCOME_TEXT) * 2) + '\n'
     with open(_LOG_FILE, 'w') as file:
         file.write(WELCOME_TEXT)
     # hides file if on Windows

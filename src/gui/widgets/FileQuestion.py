@@ -101,7 +101,12 @@ class FileQuestion(TextBoxQuestion):
         """
 
         filepath_input = self.get_textbox()
-        if os.path.exists(filepath_input) or (not self.require_existence):
+        
+        if not self.require_existence:
+            self.status_label.config(text='')
+            return True
+        
+        if os.path.exists(filepath_input):
             self.status_label.config(text='Valid filepath.',
                                      foreground=_SUCCESS_COL)
             return True

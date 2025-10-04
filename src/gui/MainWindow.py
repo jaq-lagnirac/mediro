@@ -45,7 +45,7 @@ class MainWindow(tk.Tk):
         self.title('Mediro')
         self._populate_window()
         self._populate_config_values()
-        self.output_box.update_output('Window booted up, ready to run.')
+        self.logging_box.update_output('Window booted up, ready to run.')
 
     def _populate_window(self) -> None:
         """Creates objects in main window.
@@ -67,10 +67,10 @@ class MainWindow(tk.Tk):
         self.spacer.grid(row=self._ORIGIN_ROW,
                          column=self._ORIGIN_COL,
                          columnspan=100,
-                         pady=50)
+                         pady=45)
         
         DIR_Q_WIDTH = 50
-        DIR_Q_COL_SPAN = 2
+        DIR_Q_COL_SPAN = 3
         self.input_dir_qn = FileQuestion(self,
                                          question='Input Directory:',
                                          row=(self._ORIGIN_ROW + 1),
@@ -95,17 +95,23 @@ class MainWindow(tk.Tk):
                                             is_dir_search=True,
                                             require_existence=False)
         
-        self.output_box = LoggingBox(self,
-                                     row=(self._ORIGIN_ROW + 4),
-                                     column=self._ORIGIN_COL,
-                                     output_width=80,
-                                     col_span=DIR_Q_COL_SPAN)
+        OUTPUT_BOXES_HEIGHT = 22
+        OUTPUT_BOXES_WIDTH = 88
+        LOGBOX_WIDTH = 62
+        MONITOR_WIDTH = OUTPUT_BOXES_WIDTH - LOGBOX_WIDTH
+        self.logging_box = LoggingBox(self,
+                                      row=(self._ORIGIN_ROW + 4),
+                                      column=self._ORIGIN_COL,
+                                      output_height=OUTPUT_BOXES_HEIGHT,
+                                      output_width=LOGBOX_WIDTH,
+                                      col_span=2)
 
         self.monitor = DirectoryMonitor(self,
-                                        row=(self._ORIGIN_ROW + 5),
-                                        column=self._ORIGIN_COL,
-                                        output_width=80,
-                                        col_span=DIR_Q_COL_SPAN)
+                                        row=(self._ORIGIN_ROW + 4),
+                                        column=(self._ORIGIN_COL + 2),
+                                        output_height=OUTPUT_BOXES_HEIGHT,
+                                        output_width=MONITOR_WIDTH,
+                                        col_span=1)
 
         self.input_dir_qn.text_str.trace_add('write', self.update_monitor)
         
@@ -142,7 +148,7 @@ class MainWindow(tk.Tk):
 
         # creates local config file if none present
         # and reads in config values to use locally
-        self.config = read_config(self.output_box.update_output)
+        self.config = read_config(self.logging_box.update_output)
 
         # creates dirs if they do not exist
         create_path(self.config['input_dir'])
@@ -152,7 +158,6 @@ class MainWindow(tk.Tk):
         self.input_dir_qn.set_textbox(self.config['input_dir'])
         self.output_dir_qn.set_textbox(self.config['output_dir'])
         self.unsorted_dir_qn.set_textbox(self.config['unsorted_dir'])
-        return
 
         self.monitor.update_target_dir(self.config['input_dir'])
         return
@@ -179,6 +184,8 @@ class MainWindow(tk.Tk):
             return
         
         self.monitor.update_target_dir(new_dir)
+        self.logging_box.update_output('Now targeting input ' \
+                                       f'directory: {new_dir}')
         return
 
     def save_input_to_config(self):
@@ -201,7 +208,7 @@ class MainWindow(tk.Tk):
             self.output_dir_qn.get_textbox()
         self.config['unsorted_dir'] = \
             self.input_dir_qn.get_textbox()
-        save_config(self.config, self.output_box.update_output)
+        save_config(self.config, self.logging_box.update_output)
 
         return
     

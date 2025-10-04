@@ -45,10 +45,12 @@ class DirectoryMonitor(ttk.Frame):
 
     NO_FILES_FOUND = {'No files found.' : ''}
     NOT_DIR = {'Not a directory.' : ''}
+    _DEFAULT_OUTPUT_HEIGHT = 10
     _DEFAULT_OUTPUT_WIDTH = 50
     _DEFAULT_COL_SPAN = 1
-    _FRAME_PADX_LEFT = 10
-    _FRAME_PADX_RIGHT = 10
+    _FRAME_PADX_BASE = 0
+    _FRAME_PADX_LEFT = _FRAME_PADX_BASE
+    _FRAME_PADX_RIGHT = _FRAME_PADX_BASE + 8
     _OUTPUT_FONT_INFO = ('Courier New', 12)
 
     def __init__(self,
@@ -57,6 +59,7 @@ class DirectoryMonitor(ttk.Frame):
                  target_directory : str = '.',
                  row : int = _ORIGIN_ROW,
                  column : int = (_ORIGIN_COL + 1),
+                 output_height : int = _DEFAULT_OUTPUT_HEIGHT,
                  output_width : int = _DEFAULT_OUTPUT_WIDTH,
                  col_span : int = _DEFAULT_COL_SPAN) -> None:
         """Initializes the frame to start monitoring a target directory.
@@ -66,7 +69,8 @@ class DirectoryMonitor(ttk.Frame):
             target_directory (str): The directory to watch.
             row (int): The placement row of the created object.
             column (int): The placement column of the created object.
-            output_width (int): The width of the Entry object.
+            output_height (int): The height of the Text object.
+            output_width (int): The width of the Text object.
             col_span (int): The number of columns that the object takes up.
             
         Returns:
@@ -78,6 +82,7 @@ class DirectoryMonitor(ttk.Frame):
         self.target_dir = target_directory
         self.col = column
         self.row = row
+        self.output_height = output_height
         self.output_width = output_width
         self.col_span = col_span
         self.thread_hash = {}
@@ -95,20 +100,27 @@ class DirectoryMonitor(ttk.Frame):
         self.output_text = tk.Text(self,
                                    wrap='word',
                                    font=self._OUTPUT_FONT_INFO,
-                                   height=10,
+                                   height=self.output_height,
                                    width=self.output_width)
         self.output_text.grid(row=_ORIGIN_ROW,
                               column=_ORIGIN_COL,
                               columnspan=3)
         self.output_text.config(state='disabled')
 
+        # creates scrollbar
+        self.output_scrollbar = tk.Scrollbar(self)
+        self.output_scrollbar.grid(row=0,
+                                   column=100,
+                                   rowspan=100,
+                                   sticky='NS')
+
+        # configures text widget to use scrollbar
+        self.output_text.config(yscrollcommand=self.output_scrollbar.set)
+        self.output_scrollbar.config(command=self.output_text.yview)
+
         # binds methods to events
         # self.master.bind('<Destroy>', self.cleanup_observer)
         self.master.bind('<<WatchdogEvent>>', self.handle_watchdog_event)
-        
-    def __del__(self) -> None:
-        """Class destructor"""
-        self.cleanup_observer()
 
     def update_target_dir(self, target_directory : str) -> None:
         """Starts up observer, or retargets observer to new
@@ -160,7 +172,7 @@ class DirectoryMonitor(ttk.Frame):
         finally:
             observer.stop()
             observer.join()
-
+        return
 
     def get_dir_info(self) -> dict:
         """Gathers and formats the file makeup of the target directory.
