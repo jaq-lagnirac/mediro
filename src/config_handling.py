@@ -12,7 +12,7 @@ from paths import resource_path
 
 _CONFIG_NAME = '.MEDIRO.config.json'
 _DEFAULT_CONFIG_NAME = resource_path('default.config.json')
-_INDENT = 2
+_JSON_INDENT = 2
 
 def _create_default_config(stream : Callable[[str], None]) -> None:
     """Creates new config.json if none are detected.
@@ -45,7 +45,7 @@ def _create_default_config(stream : Callable[[str], None]) -> None:
         default_values[key] = os.path.join(os.getcwd(), basename)
 
     with open(_CONFIG_NAME, 'w') as output_file:
-        json.dump(default_values, output_file, indent=_INDENT)
+        json.dump(default_values, output_file, indent=_JSON_INDENT)
 
     # hides file if on Windows
     # not needed for Linux/Mac due to dotfiles
@@ -94,7 +94,7 @@ def save_config(input_values : dict,
 
     _create_default_config(stream)
     with open(_CONFIG_NAME, 'w') as output_file:
-        json.dump(input_values, output_file, indent=_INDENT)
+        json.dump(input_values, output_file, indent=_JSON_INDENT)
     return
 
 __all__ = ['read_config', 'save_config']
