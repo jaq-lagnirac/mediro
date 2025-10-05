@@ -12,6 +12,7 @@ import tkinter as tk
 from tkinter import ttk
 from queue import Queue
 from constants import *
+from directory_analysis import analyze_filetypes
 from watchdog.events import FileSystemEvent, FileSystemEventHandler
 from watchdog.observers import Observer
 
@@ -43,8 +44,6 @@ class DirectoryMonitor(ttk.Frame):
     A class to display the contents of a target directory.
     """
 
-    NO_FILES_FOUND = {'No files found.' : ''}
-    NOT_DIR = {'Not a directory.' : ''}
     _DEFAULT_OUTPUT_HEIGHT = 10
     _DEFAULT_OUTPUT_WIDTH = 50
     _DEFAULT_COL_SPAN = 1
@@ -173,32 +172,6 @@ class DirectoryMonitor(ttk.Frame):
             observer.stop()
             observer.join()
         return
-
-    def get_dir_info(self) -> dict:
-        """Gathers and formats the file makeup of the target directory.
-        
-        Args:
-            None
-        
-        Returns:
-            dict: Returns a hash table of filetypes and counts
-        """
-
-        # counts file types in target directory
-        extension_hash = {}
-        for file in os.listdir(self.target_dir):
-            _, ext = os.path.splitext(file)
-            if not ext:
-                ext = 'Directory'
-            if ext not in extension_hash:
-                extension_hash[ext] = 0
-            extension_hash[ext] += 1
-
-        # if extension_hash is empty, notify user
-        if not extension_hash:
-            return self.NO_FILES_FOUND
-
-        return extension_hash
     
     def format_file_info(self, extension_hash : dict) -> str:
         """Formats the a dict of filetype info into
@@ -219,7 +192,7 @@ class DirectoryMonitor(ttk.Frame):
             '-' * (EXT_SPACING_WIDTH + COUNT_SPACING_WIDTH) + '\n'
         
         # body
-        for ext, count in extension_hash.items():
+        for ext, count in sorted(extension_hash.items()):
             file_info += f'{ext:<{EXT_SPACING_WIDTH}}{count}\n'
         
         return file_info
@@ -250,7 +223,7 @@ class DirectoryMonitor(ttk.Frame):
             None
         """
         watchdog_event = self.queue.get()
-        file_info = self.get_dir_info()
+        file_info = analyze_filetypes(self.target_dir)
         formatted_info = self.format_file_info(file_info)
         self.set_textbox(formatted_info)
 

@@ -73,7 +73,7 @@ class LoggingBox(ttk.Frame):
         self.output_text.config(state='disabled')
         self.output_text.tag_config('hanging_indent',
                                     lmargin1=0,
-                                    lmargin2=20)
+                                    lmargin2=20) # 10 pixels = 1 char
 
         # creates scrollbar
         self.output_scrollbar = tk.Scrollbar(self)

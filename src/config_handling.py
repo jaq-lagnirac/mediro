@@ -7,7 +7,6 @@
 import os
 import sys
 import json
-import logging
 from typing import Callable
 from paths import resource_path
 
@@ -53,7 +52,7 @@ def _create_default_config(stream : Callable[[str], None]) -> None:
     if sys.platform == 'win32':
         os.system(f'attrib +h "{_CONFIG_NAME}"')
     
-    stream('No Mediro configuration file created. ' \
+    stream('No Mediro configuration file detected. ' \
            'Creating default configuration file.')
     return
 

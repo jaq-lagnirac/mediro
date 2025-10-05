@@ -22,9 +22,6 @@ class MainWindow(tk.Tk):
     # MainLogo at (0, 0), shift subsequent objects to column 1
     _ORIGIN_ROW = _ORIGIN_ROW
     _ORIGIN_COL = _ORIGIN_COL + 1
-    # _FONT_NAME = 'Verdana'
-    # _FONT_SIZE = 10
-    # _FONT_INFO = (_FONT_NAME, _FONT_SIZE)
 
     def __init__(self) -> None:
         """Class constructor method.
@@ -46,6 +43,11 @@ class MainWindow(tk.Tk):
         self._populate_window()
         self._populate_config_values()
         self.logging_box.update_output('Window booted up, ready to run.')
+
+    def __del__(self) -> None:
+        """Class destructor method.
+        """
+        return
 
     def _populate_window(self) -> None:
         """Creates objects in main window.
@@ -128,7 +130,8 @@ class MainWindow(tk.Tk):
         self.start_button.grid(sticky='NES',
                                row=BOT_ORIGIN_ROW,
                                column=BOT_BUTTON_COL,
-                               padx=(0, 10))
+                               padx=(0, 10),
+                               pady=(10,0))
         
         return
         
@@ -179,7 +182,7 @@ class MainWindow(tk.Tk):
         # exits early if input does not exist
         if not os.path.isdir(new_dir):
             not_a_directory = \
-                self.monitor.format_file_info(self.monitor.NOT_DIR)
+                self.monitor.format_file_info(_NOT_DIR)
             self.monitor.set_textbox(not_a_directory)
             return
         
