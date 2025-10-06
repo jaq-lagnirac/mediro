@@ -76,7 +76,7 @@ class LoggingBox(ttk.Frame):
                                     lmargin2=20) # 10 pixels = 1 char
 
         # creates scrollbar
-        self.output_scrollbar = tk.Scrollbar(self)
+        self.output_scrollbar = ttk.Scrollbar(self)
         self.output_scrollbar.grid(row=0,
                                    column=100,
                                    rowspan=100,

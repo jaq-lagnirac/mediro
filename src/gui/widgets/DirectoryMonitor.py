@@ -107,7 +107,7 @@ class DirectoryMonitor(ttk.Frame):
         self.output_text.config(state='disabled')
 
         # creates scrollbar
-        self.output_scrollbar = tk.Scrollbar(self)
+        self.output_scrollbar = ttk.Scrollbar(self)
         self.output_scrollbar.grid(row=0,
                                    column=100,
                                    rowspan=100,
