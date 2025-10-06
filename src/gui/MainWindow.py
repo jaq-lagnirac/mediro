@@ -115,7 +115,7 @@ class MainWindow(tk.Tk):
                                         output_width=MONITOR_WIDTH,
                                         col_span=1)
 
-        self.input_dir_qn.text_str.trace_add('write', self.update_monitor)
+        self.input_dir_qn.add_trace_funct(self.update_monitor)
         
         stylesheet = ttk.Style()
         stylesheet.configure('Main.TButton', font=_FONT_INFO)

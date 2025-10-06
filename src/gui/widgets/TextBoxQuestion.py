@@ -6,6 +6,7 @@
 
 import tkinter as tk
 from tkinter import ttk
+from typing import Callable
 from constants import *
 
 class TextBoxQuestion(ttk.Frame):
@@ -163,5 +164,15 @@ class TextBoxQuestion(ttk.Frame):
         self.status_label.config(text='Valid input.',
                                  foreground=_SUCCESS_COL)
         return True
+    
+    def add_trace_funct(self,
+                        funct : Callable[[], None],
+                        mode : str = 'write') -> None:
+        """Links a function to track textbox updates with trace_add.
+        Args:
+            funct (Callable[[], None]): The function to be added.
+        """
+        self.text_str.trace_add(mode, funct)
+        return
 
 __all__ = ['TextBoxQuestion']
