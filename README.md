@@ -1,3 +1,5 @@
+## ***PLEASE NOTE:*** The `main` branch is currently deprecated. Work is currently being conducted to allow for cross-platform usage as well as to implement a more robust sorting algorithm which accesses media metadata to provide for more accurate sorting. View other branches (namely `cross-platform`) to see the work in-progress, and view `Insights` -> `Network` to view a graph of the full version history. Once Mediro reaches a shippable state, development will be merged into the `main` branch and versioned to `v2.0.0`. Below is the documentation for the latest stable version of Mediro (`v1.3.1`).
+
 <div align="center">
     <img src="images/logo-color.svg" width="500px" alt="Mediro Logo">
 </div>
