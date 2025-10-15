@@ -17,8 +17,8 @@ _FONT_SIZE = 14
 _FONT_INFO = (_FONT_NAME, _FONT_SIZE)
 _LOGO_COLOR = '#fee869'
 _LOG_FILE = '.mediro.log'
-_NO_FILES_FOUND = {'No files found.' : ''}
-_NOT_DIR = {'Not a valid directory.' : ''}
+_NO_FILES_FOUND = {'[NO FILES FOUND]' : ''}
+_NOT_DIR = {'[NOT A VALID DIRECTORY]' : ''}
 _LOGO_PATH = resource_path(os.path.join('.', 'images', 'logo-color.png'))
 _SUPPORTED_PHOTO_EXTS = [
     '.jpg',

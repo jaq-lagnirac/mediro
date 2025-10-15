@@ -42,11 +42,26 @@ class MainWindow(tk.Tk):
         self.title('Mediro')
         self._populate_window()
         self._populate_config_values()
+        self.protocol('WM_DELETE_WINDOW', self.graceful_shutdown)
         self.logging_box.update_output('Window booted up, ready to run.')
+        return
 
-    def __del__(self) -> None:
+    def graceful_shutdown(self) -> None:
         """Class destructor method.
+
+        Organizes saving procedures.
+
+        Args:
+            None
+        
+        Returns:
+            None
         """
+
+        self.save_on_close = self.options.get_check_value('save_on_close')
+        if self.save_on_close:
+            self.save_input_to_config()
+        self.destroy()
         return
 
     def _populate_window(self) -> None:
@@ -122,12 +137,16 @@ class MainWindow(tk.Tk):
         BOT_ORIGIN_ROW = self._ORIGIN_ROW + 10
         BOT_BUTTON_COL = self._ORIGIN_COL + DIR_Q_COL_SPAN - 1
         
+        self.options = CheckBoxToggle(self,
+                                      row=BOT_ORIGIN_ROW,
+                                      column=self._ORIGIN_COL)
+
         self.start_button = ttk.Button(self,
                                        text='Start',
                                        command=self.start_mediro_sort,
                                        width=10,
                                        style='Main.TButton')
-        self.start_button.grid(sticky='NES',
+        self.start_button.grid(sticky='E',
                                row=BOT_ORIGIN_ROW,
                                column=BOT_BUTTON_COL,
                                padx=(0, 10),
@@ -161,7 +180,9 @@ class MainWindow(tk.Tk):
         self.input_dir_qn.set_textbox(self.config['input_dir'])
         self.output_dir_qn.set_textbox(self.config['output_dir'])
         self.unsorted_dir_qn.set_textbox(self.config['unsorted_dir'])
+        self.options.set_all_check_values(self.config)
 
+        # connects file type monitor to input directory
         self.monitor.update_target_dir(self.config['input_dir'])
         return
     
@@ -205,14 +226,21 @@ class MainWindow(tk.Tk):
             None
         """
 
+        # gets textbox values and saves to config
         self.config['input_dir'] = \
             self.input_dir_qn.get_textbox()
         self.config['output_dir'] = \
             self.output_dir_qn.get_textbox()
         self.config['unsorted_dir'] = \
             self.input_dir_qn.get_textbox()
+        
+        # gets checkbox values, converts to boolean, saves boolean to config
+        check_dict = self.options.get_all_check_values()
+        for key, value in check_dict.items():
+            check_dict[key] = value.get()
+        self.config.update(check_dict)
+        
         save_config(self.config, self.logging_box.update_output)
-
         return
     
     def start_mediro_sort(self) -> None:
@@ -228,7 +256,10 @@ class MainWindow(tk.Tk):
         input_dir = self.input_dir_qn.get_textbox()
         output_dir = self.output_dir_qn.get_textbox()
         unsorted_dir = self.unsorted_dir_qn.get_textbox()
-        mediro_sort(input_dir, output_dir, unsorted_dir)
+        mediro_sort(input_dir,
+                    output_dir,
+                    unsorted_dir,
+                    self.logging_box.update_output)
         return
     
 __all__ = ['MainWindow']

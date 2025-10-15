@@ -5,6 +5,24 @@
 import os
 from constants import *
 
+def count_total_files(dir : str) -> int:
+    """Counts the number of files in a target directory,
+    not including directories themselves. Non-recursive.
+    
+    Args:
+        dir (str): Directory to be analyzed.
+    
+    Returns:
+        int: Returns the total number of files
+        (directories not included).
+    """
+    file_count = 0
+    for file in os.listdir(dir):
+        _, ext = os.path.splitext(file)
+        if ext:
+            file_count += 1
+    return file_count
+
 def analyze_filetypes(dir : str) -> dict:
     """Gathers and formats the file makeup of the target directory.
     
@@ -20,7 +38,7 @@ def analyze_filetypes(dir : str) -> dict:
     for file in os.listdir(dir):
         _, ext = os.path.splitext(file)
         if not ext:
-            ext = 'Directory'
+            ext = 'Directories'
         if ext not in extension_hash:
             extension_hash[ext] = 0
         extension_hash[ext] += 1
@@ -31,4 +49,5 @@ def analyze_filetypes(dir : str) -> dict:
 
     return extension_hash
 
-__all__ = ['analyze_filetypes']
+__all__ = ['count_total_files',
+           'analyze_filetypes']

@@ -31,7 +31,7 @@ def main() -> None:
         window.mainloop()
     finally:
         with open(_LOG_FILE, 'r') as file:
-            print(file.read())
+            print(file.read()) # possibly remove before prod
         os.remove(_LOG_FILE)
 
 if __name__ == "__main__":

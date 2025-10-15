@@ -31,13 +31,32 @@ def _create_default_config(stream : Callable[[str], None]) -> None:
         None
     """
     
-    if os.path.exists(_CONFIG_NAME):
-        stream('Mediro configuration file found.')
-        return
-    
-    default_values = None # scope resolution
+    # extracts default config values
+    default_values = {} # scope resolution
     with open(_DEFAULT_CONFIG_NAME, 'r') as default_file:
         default_values = json.load(default_file)
+    
+    if os.path.exists(_CONFIG_NAME):
+        stream('Mediro configuration file found.')
+
+        # checks to see if all keys are there,
+        # updates JSON with new defaults if not there
+        with open(_CONFIG_NAME, 'r+') as input_config:
+            existing_config = json.load(input_config)
+            
+            default_keys = set(default_values.keys())
+            existing_keys = set(existing_config.keys())
+            if not default_keys.issubset(existing_keys):
+                stream('Old configuration file detected. ' \
+                       'Updating file with new defaults. ' \
+                        'Previously saved values will be preserved.')
+                # adds new defaults while preserving old config values
+                default_values.update(existing_config)
+
+                input_config.seek(0) # go to beginning of file
+                json.dump(default_values, input_config, indent=_JSON_INDENT)
+                input_config.truncate() # removes bytes if old file too long
+        return
 
     keys_to_add_cwd = default_values['keys_to_add_cwd']
     for key in keys_to_add_cwd:
@@ -72,6 +91,7 @@ def read_config(stream : Callable[[str], None] = print) -> dict:
 
     _create_default_config(stream)
 
+    stream('Reading configuration file...')
     config_values = None # scope resolution
     with open(_CONFIG_NAME, 'r') as input_file:
         config_values = json.load(input_file)
@@ -87,12 +107,15 @@ def save_config(input_values : dict,
     
     Args:
         input_values (dict): The values to be stored in the file.
+        stream (Callable[[str], None]): The output stream for the messages.
     
     Returns:
         None
     """
 
     _create_default_config(stream)
+    
+    stream('Saving configuration file...')
     with open(_CONFIG_NAME, 'w') as output_file:
         json.dump(input_values, output_file, indent=_JSON_INDENT)
     return

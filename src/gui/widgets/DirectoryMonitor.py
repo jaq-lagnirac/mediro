@@ -12,7 +12,7 @@ import tkinter as tk
 from tkinter import ttk
 from queue import Queue
 from constants import *
-from directory_analysis import analyze_filetypes
+from directory_analysis import analyze_filetypes, count_total_files
 from watchdog.events import FileSystemEvent, FileSystemEventHandler
 from watchdog.observers import Observer
 
@@ -223,8 +223,9 @@ class DirectoryMonitor(ttk.Frame):
             None
         """
         watchdog_event = self.queue.get()
-        file_info = analyze_filetypes(self.target_dir)
-        formatted_info = self.format_file_info(file_info)
+        self.file_info = analyze_filetypes(self.target_dir)
+        self.file_info['All files'] = count_total_files(self.target_dir)
+        formatted_info = self.format_file_info(self.file_info)
         self.set_textbox(formatted_info)
 
     def notify(self, *event : FileSystemEvent) -> None:

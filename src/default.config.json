@@ -1,7 +1,9 @@
 {
   "input_dir" : "MEDIRO_requires_sorting",
-  "output_dir" : ".",
+  "output_dir" : "",
   "unsorted_dir" : "MEDIRO_unsorted",
+  "save_on_close" : true,
+  "save_on_execution" : false,
   "keys_to_add_cwd" : [
     "input_dir",
     "output_dir",

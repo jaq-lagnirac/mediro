@@ -6,9 +6,11 @@
 
 import os
 from datetime import datetime, timezone
+from typing import Callable
 import exifread # for parsing images
 import ffmpeg # for parsing videos
 from paths import create_path
+from directory_analysis import count_total_files, analyze_filetypes
 
 def _read_photo_metadata(filename : str) -> datetime:
     """Handles attempts to read photo metadata using ExifRead.
@@ -122,7 +124,8 @@ def _datetime_to_relpath(datetime_obj : datetime) -> str:
 
 def mediro_sort(input_dir : str,
                 output_dir : str,
-                unsorted_dir : str) -> None:
+                unsorted_dir : str,
+                stream : Callable[[str], None] = print) -> None:
     """Performs main MEDIRO tasks.
 
     A function which takes an input directory path, reads
@@ -137,15 +140,22 @@ def mediro_sort(input_dir : str,
         unsorted_dir (str): The relative path to the unosrted
             directory, where media that cannot be sorted by
             Mediro will go.
+        stream (Callable[[str], None]): The output stream for
+            the messages.
     
     Returns:
         None
     """
 
+    file_count = count_total_files(input_dir)
+    plural_s = lambda : '' if file_count == 1 else 's'
+    stream(f'{file_count} file{plural_s()} found for sorting.')
+
     for filename in os.listdir(input_dir):
         
         full_input_path = os.path.join(input_dir, filename)
         if os.path.isdir(full_input_path):
+            stream(f'Skipping directory \"{filename}\".')
             continue # skips past directories in input_dir
 
         # attempts to extract datetime object from metadata
@@ -153,7 +163,10 @@ def mediro_sort(input_dir : str,
 
         # if metadata found, generates output pathway
         # otherwise defaults path to unsorted directory
-        target_dir_path = unsorted_dir # default value, scope resolution
+        #
+        # default values, scope resolution
+        target_date_dir = 'UNSORTED DIR'
+        target_dir_path = unsorted_dir
         if datetime_metadata:
             target_date_dir = _datetime_to_relpath(datetime_metadata)
             target_dir_path = os.path.join(output_dir, target_date_dir)
@@ -166,13 +179,18 @@ def mediro_sort(input_dir : str,
             # TODO: 2025-09-24 - Possible future direction:
             # implement different handling for duplicate files, allow
             # user to determine changes
+            stream(f'SORTING: {filename} | LOCATION: {target_date_dir}')
             os.replace(full_input_path, full_target_path)
+        else:
+            stream(f'DUPLICATE: {filename} | LOCATION: {target_date_dir} | '
+                   f'Leaving file in input directory.')
 
 __all__ = ['mediro_sort']
 
 # test code, remove before production
 if __name__ == "__main__":
     test_dir = os.path.join('..', 'test')
+    input_dir = os.path.join(test_dir, 'input')
     output_dir = os.path.join(test_dir, 'output')
     unsorted_dir = os.path.join(test_dir, 'unsorted')
-    mediro_sort(test_dir, output_dir, unsorted_dir)
+    mediro_sort(input_dir, output_dir, unsorted_dir)
