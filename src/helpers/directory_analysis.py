@@ -3,7 +3,7 @@
 # Tools to analyze a given directory and facilitate the output to a user.
 
 import os
-from constants import *
+from .constants import *
 
 def count_total_files(dir : str) -> int:
     """Counts the number of files in a target directory,

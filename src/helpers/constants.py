@@ -5,7 +5,7 @@
 # shared across all Python files
 
 import os
-from paths import resource_path
+from .paths import resource_path
 
 _ARBITRARILY_LARGE_NUM = 100 # to take up entire left side
 _ORIGIN_ROW = 0

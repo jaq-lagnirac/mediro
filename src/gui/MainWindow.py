@@ -8,10 +8,10 @@ import os
 import tkinter as tk
 from tkinter import ttk
 from .widgets import *
-from config_handling import read_config, save_config
-from paths import create_path
-from constants import *
-from mediro_engine import mediro_sort
+from helpers.config_handling import read_config, save_config
+from helpers.paths import create_path
+from helpers.constants import *
+from helpers.mediro_engine import mediro_sort
 
 class MainWindow(tk.Tk):
 

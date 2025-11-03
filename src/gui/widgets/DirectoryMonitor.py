@@ -11,8 +11,8 @@ import threading
 import tkinter as tk
 from tkinter import ttk
 from queue import Queue
-from constants import *
-from directory_analysis import analyze_filetypes, count_total_files
+from helpers.constants import *
+from helpers.directory_analysis import analyze_filetypes, count_total_files
 from watchdog.events import FileSystemEvent, FileSystemEventHandler
 from watchdog.observers import Observer
 

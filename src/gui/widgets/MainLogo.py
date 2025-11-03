@@ -6,7 +6,7 @@
 import tkinter as tk
 from tkinter import ttk
 from PIL import ImageTk, Image
-from constants import *
+from helpers.constants import *
 
 class MainLogo(ttk.Frame):
 

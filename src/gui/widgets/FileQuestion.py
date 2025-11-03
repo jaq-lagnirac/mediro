@@ -9,7 +9,7 @@ import tkinter as tk
 from tkinter import ttk
 from tkinter import filedialog
 from .TextBoxQuestion import TextBoxQuestion
-from constants import *
+from helpers.constants import *
 
 class FileQuestion(TextBoxQuestion):
 

@@ -7,7 +7,7 @@
 import tkinter as tk
 from tkinter import ttk
 from typing import Callable
-from constants import *
+from helpers.constants import *
 
 class TextBoxQuestion(ttk.Frame):
 

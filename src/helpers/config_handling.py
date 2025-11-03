@@ -8,10 +8,11 @@ import os
 import sys
 import json
 from typing import Callable
-from paths import resource_path
+from .paths import resource_path
 
 _CONFIG_NAME = '.MEDIRO.config.json'
-_DEFAULT_CONFIG_NAME = resource_path('default.config.json')
+_DEFAULT_CONFIG_NAME = resource_path(os.path.join('helpers',
+                                                  'default.config.json'))
 _JSON_INDENT = 2
 
 def _create_default_config(stream : Callable[[str], None]) -> None:

@@ -6,7 +6,7 @@ import os
 import sys
 import logging
 from gui import MainWindow
-from constants import *
+from helpers.constants import *
 
 def main() -> None:
     """The main function of the entire application."""

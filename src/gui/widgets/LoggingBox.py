@@ -8,7 +8,7 @@ import sys
 import logging
 import tkinter as tk
 from tkinter import ttk
-from constants import *
+from helpers.constants import *
 
 class LoggingBox(ttk.Frame):
 

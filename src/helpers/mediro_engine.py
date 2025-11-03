@@ -9,8 +9,8 @@ from datetime import datetime, timezone
 from typing import Callable
 import exifread # for parsing images
 import ffmpeg # for parsing videos
-from paths import create_path
-from directory_analysis import count_total_files, analyze_filetypes
+from .paths import create_path
+from .directory_analysis import count_total_files, analyze_filetypes
 
 def _read_photo_metadata(filename : str) -> datetime:
     """Handles attempts to read photo metadata using ExifRead.
