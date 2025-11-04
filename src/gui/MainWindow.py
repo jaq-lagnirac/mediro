@@ -7,11 +7,13 @@
 import os
 import tkinter as tk
 from tkinter import ttk
+from time import perf_counter
 from .widgets import *
 from helpers.config_handling import read_config, save_config
 from helpers.paths import create_path
 from helpers.constants import *
 from helpers.mediro_engine import mediro_sort
+from helpers.directory_analysis import count_total_files
 
 class MainWindow(tk.Tk):
 
@@ -43,7 +45,7 @@ class MainWindow(tk.Tk):
         self._populate_window()
         self._populate_config_values()
         self.protocol('WM_DELETE_WINDOW', self.graceful_shutdown)
-        self.logging_box.update_output('Window booted up, ready to run.')
+        self.logging_box.update_output('Application booted up, ready to run.')
         return
 
     def graceful_shutdown(self) -> None:
@@ -236,15 +238,17 @@ class MainWindow(tk.Tk):
         
         # gets checkbox values, converts to boolean, saves boolean to config
         check_dict = self.options.get_all_check_values()
+        bool_dict = {}
         for key, value in check_dict.items():
-            check_dict[key] = value.get()
-        self.config.update(check_dict)
+            bool_dict[key] = value.get()
+        self.config.update(bool_dict)
         
         save_config(self.config, self.logging_box.update_output)
         return
     
     def start_mediro_sort(self) -> None:
-        """Streamlines the mediro_sort call.
+        """Streamlines the mediro_sort call,
+        handles before and after stream updates.
         
         Args:
             None
@@ -253,13 +257,33 @@ class MainWindow(tk.Tk):
             None
         """
 
+        stream_alias = self.logging_box.update_output
+
+        stream_alias('Beginning Mediro execution.')
+        start_time = perf_counter()
+
         input_dir = self.input_dir_qn.get_textbox()
         output_dir = self.output_dir_qn.get_textbox()
         unsorted_dir = self.unsorted_dir_qn.get_textbox()
+
+        self.save_on_execution = \
+            self.options.get_check_value('save_on_execution')
+        if self.save_on_execution:
+            self.save_input_to_config()
+        
+        file_count = count_total_files(input_dir)
+        plural_s = lambda : '' if file_count == 1 else 's'
+        stream_alias(f'{file_count} file{plural_s()} found for sorting.')
+
         mediro_sort(input_dir,
                     output_dir,
                     unsorted_dir,
-                    self.logging_box.update_output)
+                    stream_alias)
+        
+        end_time = perf_counter()
+        elapsed_time = end_time - start_time
+        stream_alias('Finished Mediro execution. '
+                     f'Elapsed time: {elapsed_time:.4f} secs.')
         return
     
 __all__ = ['MainWindow']

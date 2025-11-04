@@ -10,7 +10,6 @@ from typing import Callable
 import exifread # for parsing images
 import ffmpeg # for parsing videos
 from .paths import create_path
-from .directory_analysis import count_total_files, analyze_filetypes
 
 def _read_photo_metadata(filename : str) -> datetime:
     """Handles attempts to read photo metadata using ExifRead.
@@ -146,10 +145,6 @@ def mediro_sort(input_dir : str,
     Returns:
         None
     """
-
-    file_count = count_total_files(input_dir)
-    plural_s = lambda : '' if file_count == 1 else 's'
-    stream(f'{file_count} file{plural_s()} found for sorting.')
 
     for filename in os.listdir(input_dir):
         

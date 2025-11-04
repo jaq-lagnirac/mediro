@@ -5,7 +5,6 @@
 # Loosely based on stack overflow post linked below:
 # https://stackoverflow.com/a/41684432
 
-import os
 import time
 import threading
 import tkinter as tk

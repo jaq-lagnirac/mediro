@@ -3,8 +3,6 @@
 # Handles the logging functionalities of the application,
 # Sets up and facilitates output to the user.
 
-import os
-import sys
 import logging
 import tkinter as tk
 from tkinter import ttk
