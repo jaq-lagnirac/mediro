@@ -138,10 +138,22 @@ class MainWindow(tk.Tk):
         stylesheet.configure('Main.TButton', font=_FONT_INFO)
         BOT_ORIGIN_ROW = self._ORIGIN_ROW + 10
         BOT_BUTTON_COL = self._ORIGIN_COL + DIR_Q_COL_SPAN - 1
-        
+        BOTTOM_LEFT_WIDGET_COUNT = 2
+
         self.options = CheckBoxToggle(self,
                                       row=BOT_ORIGIN_ROW,
                                       column=self._ORIGIN_COL)
+        
+        self.reset_button = ttk.Button(self,
+                                       text='Reset to default',
+                                       command=self.reset_config_to_default,
+                                       width=15,
+                                       style='Main.TButton')
+        self.reset_button.grid(sticky='W',
+                               row=(BOT_ORIGIN_ROW + 1),
+                               column=self._ORIGIN_COL,
+                               padx=(20, 10),
+                               pady=(10,0))
 
         self.start_button = ttk.Button(self,
                                        text='Start',
@@ -151,6 +163,7 @@ class MainWindow(tk.Tk):
         self.start_button.grid(sticky='E',
                                row=BOT_ORIGIN_ROW,
                                column=BOT_BUTTON_COL,
+                            #    rowspan=BOTTOM_LEFT_WIDGET_COUNT,
                                padx=(0, 10),
                                pady=(10,0))
         
@@ -186,6 +199,25 @@ class MainWindow(tk.Tk):
 
         # connects file type monitor to input directory
         self.monitor.update_target_dir(self.config['input_dir'])
+        return
+    
+    def reset_config_to_default(self) -> None:
+        """Deletes existing config if it exists and
+        resets all values back to the default values
+        contained in the default JSON file.
+        
+        Args:
+            None
+        
+        Return:
+            None
+        """
+        stream = self.logging_box.update_output
+        stream('Resetting values to default.')
+        if os.path.exists(_CONFIG_NAME):
+            stream('Deleting existing configuration file.')
+            os.remove(_CONFIG_NAME)
+        self._populate_config_values()
         return
     
     def update_monitor(self, *entry : tk.Event) -> None:
@@ -234,8 +266,8 @@ class MainWindow(tk.Tk):
         self.config['output_dir'] = \
             self.output_dir_qn.get_textbox()
         self.config['unsorted_dir'] = \
-            self.input_dir_qn.get_textbox()
-        
+            self.unsorted_dir_qn.get_textbox()
+
         # gets checkbox values, converts to boolean, saves boolean to config
         check_dict = self.options.get_all_check_values()
         bool_dict = {}
