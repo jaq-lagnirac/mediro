@@ -2,6 +2,11 @@
 MEDIRO_requires_sorting/
 MEDIRO_unsorted/
 20*/
+test/
+
+# testing files
+*.jpg
+*.mp4
 
 # virtual environments
 .venv
