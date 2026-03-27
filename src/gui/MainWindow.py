@@ -63,6 +63,7 @@ class MainWindow(tk.Tk):
         self.save_on_close = self.options.get_check_value('save_on_close')
         if self.save_on_close:
             self.save_input_to_config()
+        self.logging_box.update_output('Shutting down window.')
         self.destroy()
         return
 

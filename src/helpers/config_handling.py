@@ -65,9 +65,10 @@ def _create_default_config(stream : Callable[[str], None]) -> None:
 
     # hides file if on Windows
     # not needed for Linux/Mac due to dotfiles
+    # NOTE: if testing, move out of WSL dist folder
     if sys.platform == 'win32':
         os.system(f'attrib +h "{_CONFIG_NAME}"')
-    
+
     stream('No Mediro configuration file detected. ' \
            'Creating default configuration file.')
     return
@@ -113,6 +114,9 @@ def save_config(input_values : dict,
     _create_default_config(stream)
     
     stream('Saving configuration file...')
+    # deletes old log file, w does not overwrite consistently
+    if os.path.exists(_CONFIG_NAME):
+        os.remove(_CONFIG_NAME)
     with open(_CONFIG_NAME, 'w') as output_file:
         json.dump(input_values, output_file, indent=_JSON_INDENT)
     return

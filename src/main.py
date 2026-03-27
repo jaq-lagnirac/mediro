@@ -14,10 +14,15 @@ def main() -> None:
     # configures and starts up logging function
     WELCOME_TEXT = 'Welcome to Mediro!'
     WELCOME_TEXT += '\n' + ('-' * len(WELCOME_TEXT) * 2) + '\n'
+    # deletes old log file, w does not overwrite consistently
+    if os.path.exists(_LOG_FILE):
+        os.remove(_LOG_FILE)
     with open(_LOG_FILE, 'w') as file:
         file.write(WELCOME_TEXT)
+    
     # hides file if on Windows
     # not needed for Linux/Mac due to dotfiles
+    # NOTE: if testing, move out of WSL dist folder
     if sys.platform == 'win32':
         os.system(f'attrib +h "{_LOG_FILE}"')
     LOGGING_FORMAT = '[%(asctime)s] %(message)s'
@@ -29,10 +34,14 @@ def main() -> None:
         # boots up main window to user
         window = MainWindow()
         window.mainloop()
+    except Exception as e:
+        print(e)
     finally:
-        with open(_LOG_FILE, 'r') as file:
-            print(file.read()) # possibly remove before prod
-        os.remove(_LOG_FILE)
+        print('je suis fini.') # placeholder for wrap-up statements
+
+        # with open(_LOG_FILE, 'r') as file:
+        #     print(file.read()) # possibly remove before prod
+        # os.remove(_LOG_FILE)
 
 if __name__ == "__main__":
     main()

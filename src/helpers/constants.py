@@ -21,9 +21,10 @@ _NO_FILES_FOUND = {'[NO FILES FOUND]' : ''}
 _NOT_DIR = {'[NOT A VALID DIRECTORY]' : ''}
 _JSON_INDENT = 2
 _CONFIG_NAME = '.MEDIRO.config.json'
-_DEFAULT_CONFIG_NAME = resource_path(os.path.join('helpers',
+_DEFAULT_CONFIG_NAME = resource_path(os.path.join('src',
+                                                  'helpers',
                                                   'default.config.json'))
-_LOGO_PATH = resource_path(os.path.join('.', 'images', 'logo-color.png'))
+_LOGO_PATH = resource_path(os.path.join('src', 'images', 'logo-color.png'))
 _SUPPORTED_PHOTO_EXTS = [
     '.jpg',
     '.jpeg',
