@@ -20,5 +20,6 @@ build/
 dist/
 *.spec
 
-# active configuration files
+# active config and runtime files
 .MEDIRO.config.json
+.mediro.log
